@@ -153,7 +153,7 @@ const CTASection = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              to="/#featured"
+              to="/products?featured=true"
               className="btn-gold text-lg px-8 py-4 inline-flex items-center shadow-2xl"
             >
               <ShoppingBag className="w-5 h-5 mr-2" />
@@ -168,7 +168,7 @@ const CTASection = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              to="/#categories"
+              to="/products"
               className="bg-white/10 hover:bg-white/20 border-2 border-white/30 text-white hover:border-white/50 font-medium py-4 px-8 rounded-lg transition-all duration-200 ease-in-out text-lg inline-flex items-center backdrop-blur-sm"
             >
               Browse Categories

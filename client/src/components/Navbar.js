@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Search, ShoppingBag } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,7 +27,7 @@ const Navbar = () => {
     { name: 'Home', path: '/', isActive: location.pathname === '/' },
     { name: 'Products', path: '/products', isActive: location.pathname === '/products' },
     { name: 'Search', path: '/search', isActive: location.pathname === '/search' },
-    { name: 'About', path: '/#about', isActive: false },
+    { name: 'Categories', path: '/products?view=categories', isActive: false },
   ];
 
   return (
@@ -49,8 +49,8 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center space-x-2"
               >
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center">
+                  <img src="/perciumt.png" alt="Purcmium Logo" className="w-8 h-8 lg:w-10 lg:h-10 object-contain" />
                 </div>
                 <span className="text-xl lg:text-2xl font-serif font-bold text-gradient">
                   Purcmium
@@ -69,7 +69,7 @@ const Navbar = () => {
                       ? 'text-primary-600'
                       : isScrolled
                       ? 'text-navy-700 hover:text-primary-600'
-                      : 'text-white hover:text-gold-400'
+                      : 'text-gray-100 hover:text-gold-300 drop-shadow-sm'
                   }`}
                 >
                   <span className="relative z-10">{item.name}</span>
@@ -91,7 +91,7 @@ const Navbar = () => {
                 className={`p-2 rounded-lg transition-colors duration-200 ${
                   isScrolled
                     ? 'text-navy-600 hover:bg-gray-100'
-                    : 'text-white hover:bg-white/10'
+                    : 'text-gray-100 hover:bg-white/10 drop-shadow-sm'
                 }`}
               >
                 <Search className="w-5 h-5" />
@@ -113,7 +113,7 @@ const Navbar = () => {
               className={`lg:hidden p-2 rounded-lg transition-colors duration-200 ${
                 isScrolled
                   ? 'text-navy-600 hover:bg-gray-100'
-                  : 'text-white hover:bg-white/10'
+                  : 'text-gray-100 hover:bg-white/10 drop-shadow-sm'
               }`}
             >
               {isMobileMenuOpen ? (
