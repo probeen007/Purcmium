@@ -11,6 +11,11 @@ const api = axios.create({
   }
 });
 
+// For production (relative URLs), use window.location.origin
+if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_API_URL) {
+  api.defaults.baseURL = '/api';
+}
+
 // Request interceptor
 api.interceptors.request.use(
   (config) => {

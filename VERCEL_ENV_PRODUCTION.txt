@@ -1,0 +1,112 @@
+# =================================================================
+# VERCEL PRODUCTION ENVIRONMENT VARIABLES FOR BACKEND (SERVER)
+# =================================================================
+# Copy these variables to Vercel Dashboard:
+# 1. Go to your backend project: https://vercel.com/dashboard
+# 2. Settings > Environment Variables
+# 3. Add each variable below
+# =================================================================
+
+# Server Configuration
+NODE_ENV=production
+PORT=5000
+
+# ⚠️ CRITICAL: MongoDB Atlas Connection
+# Go to MongoDB Atlas > Database > Connect > Get connection string
+# Replace <username>, <password>, and database name
+MONGODB_ATLAS_URI=mongodb+srv://offstream9_db_user:CRSEXYADATYA@cluster0.ebglno5.mongodb.net/purcmium
+
+# Database Name
+DB_NAME=purcmium
+
+# ⚠️ CRITICAL: JWT Secret (Use the one generated below)
+# This is the secure JWT secret from your current .env
+JWT_SECRET=dda7403369cc9903fa1ef746c32a7dcb98d0a6bbf0fa4142954df443177bf3253eda335db7c7faf0abc9f00711d60a050392e1deecd5aeb48ad5b3cf8beac6a9
+JWT_EXPIRE=7d
+
+# Admin Credentials
+ADMIN_EMAIL=admin@purcmium.com
+ADMIN_PASSWORD=VEWEkdaQvdBO0fEluwJd23VNmzQ=
+
+# ⚠️ IMPORTANT: Frontend URL (Your Vercel frontend domain)
+FRONTEND_URL=https://purcmiumv1.vercel.app
+
+# ⚠️ IMPORTANT: CORS Origins (Must match your frontend URL)
+CORS_ORIGINS=https://purcmiumv1.vercel.app
+
+# Cookie Domain for Vercel
+COOKIE_DOMAIN=.vercel.app
+
+# Security
+BCRYPT_ROUNDS=12
+
+# =================================================================
+# VERCEL PRODUCTION ENVIRONMENT VARIABLES FOR FRONTEND (CLIENT)
+# =================================================================
+# Add to frontend Vercel project AFTER deploying backend
+# Settings > Environment Variables
+# =================================================================
+
+# ⚠️ UPDATE THIS: Replace with your actual backend URL after deploying
+REACT_APP_API_URL=https://your-backend-project-name.vercel.app/api
+
+# Production optimizations
+GENERATE_SOURCEMAP=false
+IMAGE_INLINE_SIZE_LIMIT=10000
+REACT_APP_ENABLE_DEV_TOOLS=false
+
+# =================================================================
+# DEPLOYMENT CHECKLIST
+# =================================================================
+# 
+# □ Step 1: Deploy Backend First
+#   1. Create new Vercel project for "server" folder
+#   2. Set Root Directory: server
+#   3. Add all backend environment variables above
+#   4. Copy your backend URL (e.g., https://backend-abc123.vercel.app)
+#
+# □ Step 2: Update Frontend Environment
+#   1. Go to frontend Vercel project (purcmiumv1.vercel.app)
+#   2. Settings > Environment Variables
+#   3. Update REACT_APP_API_URL with your backend URL from Step 1
+#   4. Example: https://purcmium-backend.vercel.app/api
+#   5. Redeploy frontend
+#
+# □ Step 3: Update Backend CORS
+#   1. Go to backend Vercel project
+#   2. Verify CORS_ORIGINS = https://purcmiumv1.vercel.app
+#   3. Verify FRONTEND_URL = https://purcmiumv1.vercel.app
+#
+# □ Step 4: Security Checklist (BEFORE PRODUCTION!)
+#   ⚠️ CRITICAL - DO THESE NOW:
+#   1. Go to MongoDB Atlas > Database Access
+#   2. DELETE user "offstream9_db_user"
+#   3. Create NEW user with strong random password
+#   4. Update MONGODB_ATLAS_URI in Vercel with new credentials
+#   5. Change ADMIN_PASSWORD to a new secure password
+#   6. Redeploy backend after updating credentials
+#
+# □ Step 5: Test Everything
+#   1. Visit https://purcmiumv1.vercel.app
+#   2. Check if products load (Network tab, check API calls)
+#   3. Try admin login at /admin/login
+#   4. Check browser console for errors
+#   5. Test product clicks and tracking
+#
+# =================================================================
+# TROUBLESHOOTING 405 ERROR
+# =================================================================
+# 
+# 405 Method Not Allowed means:
+# 1. Backend not deployed yet → Deploy server folder to Vercel
+# 2. Wrong API URL in frontend → Update REACT_APP_API_URL
+# 3. CORS issues → Check CORS_ORIGINS matches frontend URL exactly
+# 4. Vercel config issue → Check server/vercel.json exists
+#
+# Quick Fix:
+# 1. Deploy backend: cd server && vercel --prod
+# 2. Copy backend URL
+# 3. Update frontend env: REACT_APP_API_URL=<backend-url>/api
+# 4. Redeploy frontend: cd client && vercel --prod
+#
+# =================================================================
