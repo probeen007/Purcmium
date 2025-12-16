@@ -26,8 +26,19 @@
       "dest": "/client/static/$1"
     },
     {
+      "src": "/perciumt.png",
+      "dest": "/client/perciumt.png"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/client/manifest.json"
+    },
+    {
       "src": "/(.*\\.(?:js|css|png|jpg|jpeg|gif|svg|ico|json|woff|woff2|ttf))",
       "dest": "/client/$1"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
