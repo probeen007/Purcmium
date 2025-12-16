@@ -111,6 +111,23 @@ app.use(cookieParser());
 // Data sanitization against NoSQL injection
 app.use(mongoSanitize());
 
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Purcmium API Server',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      products: '/api/products',
+      auth: '/api/auth',
+      admin: '/api/admin',
+      tracking: '/api/track'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ 
