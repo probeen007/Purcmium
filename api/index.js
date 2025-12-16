@@ -1,4 +1,2 @@
-// Vercel serverless function wrapper
-const app = require('../server/server');
-
-module.exports = app;
+// Vercel serverless function entry point
+module.exports = require('../server/server');

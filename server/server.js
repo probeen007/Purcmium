@@ -211,7 +211,7 @@ const connectDB = async () => {
   }
 };
 
-// Start server
+// Start server (only for local development)
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
@@ -256,6 +256,24 @@ process.on('SIGINT', async () => {
 // Prevent memory leaks
 process.setMaxListeners(15);
 
-startServer().catch(console.error);
+// Only start server if not in Vercel (serverless)
+if (require.main === module) {
+  startServer().catch(console.error);
+}
 
-module.exports = app;
+// For Vercel serverless - connect to DB on first request
+let dbConnected = false;
+const ensureDBConnection = async () => {
+  if (!dbConnected) {
+    await connectDB();
+    dbConnected = true;
+  }
+};
+
+// Wrap app to ensure DB connection for serverless
+const handler = async (req, res) => {
+  await ensureDBConnection();
+  return app(req, res);
+};
+
+module.exports = handler;
