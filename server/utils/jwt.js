@@ -26,7 +26,10 @@ const sendTokenResponse = (admin, statusCode, res) => {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    ...(process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN && {
+      domain: process.env.COOKIE_DOMAIN
+    })
   };
 
   res

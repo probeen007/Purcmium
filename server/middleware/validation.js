@@ -80,8 +80,37 @@ const createProductSchema = Joi.object({
     .items(
       Joi.string()
         .uri()
-        .pattern(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)
-        .message('Image must be a valid URL ending with jpg, jpeg, png, gif, or webp')
+        .pattern(/^https?:\/\/.+/)
+        .custom((value, helpers) => {
+          // Check for unsafe schemes
+          if (/javascript:/i.test(value)) {
+            return helpers.error('string.unsafe');
+          }
+          
+          // Check if it's a known CDN or has image extension
+          const cdnPatterns = [
+            /cloudinary\.com/,
+            /imgix\.net/,
+            /cloudflare\.com/,
+            /amazonaws\.com/,
+            /cloudfront\.net/,
+            /imgur\.com/
+          ];
+          
+          const hasImageExtension = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(value);
+          const isCDN = cdnPatterns.some(pattern => pattern.test(value));
+          
+          if (!hasImageExtension && !isCDN) {
+            return helpers.message('Image must be a valid image URL or from a known CDN');
+          }
+          
+          return value;
+        })
+        .messages({
+          'string.uri': 'Image must be a valid URL',
+          'string.pattern.base': 'Image URL must start with http:// or https://',
+          'string.unsafe': 'Image URL contains unsafe content'
+        })
     )
     .min(1)
     .max(10)

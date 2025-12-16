@@ -110,10 +110,10 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors duration-200 ${
+              className={`lg:hidden p-2 rounded-lg transition-colors duration-200 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center ${
                 isScrolled
-                  ? 'text-navy-600 hover:bg-gray-100'
-                  : 'text-gray-100 hover:bg-white/10 drop-shadow-sm'
+                  ? 'text-navy-600 hover:bg-gray-100 active:bg-gray-200'
+                  : 'text-gray-100 hover:bg-white/10 active:bg-white/20 drop-shadow-sm'
               }`}
             >
               {isMobileMenuOpen ? (

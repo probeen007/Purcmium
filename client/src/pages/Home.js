@@ -22,14 +22,6 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    loadHomeData();
-    
-    // Auto-refresh every 5 minutes to get latest data
-    const interval = setInterval(loadHomeData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   const loadHomeData = useCallback(async (showRefreshMsg = false) => {
     try {
       if (showRefreshMsg) {
@@ -72,6 +64,14 @@ const Home = () => {
       setRefreshing(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadHomeData();
+    
+    // Auto-refresh every 5 minutes to get latest data
+    const interval = setInterval(loadHomeData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [loadHomeData]);
 
   const handleRefresh = () => {
     loadHomeData(true);
@@ -118,15 +118,15 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       {/* Refresh Button */}
-      <div className="fixed top-20 right-4 z-50">
+      <div className="fixed top-20 sm:top-24 right-4 z-50">
         <button
           onClick={handleRefresh}
           disabled={refreshing}
-          className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-white"
+          className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-white active:scale-95 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
           title="Refresh content from database"
         >
           <RefreshCw 
-            className={`w-4 h-4 text-gray-600 ${
+            className={`w-5 h-5 text-gray-600 ${
               refreshing ? 'animate-spin' : 'hover:text-primary-600'
             }`} 
           />

@@ -192,14 +192,14 @@ const ProductDetail = () => {
 
               {/* Image Thumbnails */}
               {product.images && product.images.length > 1 && (
-                <div className="flex space-x-2 overflow-x-auto pb-2">
+                <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
                   {product.images.map((image, index) => (
                     <motion.button
                       key={index}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                      className={`flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border-2 transition-colors touch-manipulation ${
                         selectedImageIndex === index
                           ? 'border-primary-500'
                           : 'border-gray-200 hover:border-gray-300'

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Tag, TrendingUp } from 'lucide-react';
 import { formatCurrency } from '../utils/helpers';
 import { trackingAPI } from '../utils/api';
 
-const ProductCard = ({ product, index = 0, featured = false }) => {
+const ProductCard = memo(({ product, index = 0, featured = false }) => {
   const handleProductClick = async () => {
     try {
       // Track click
@@ -166,6 +166,8 @@ const ProductCard = ({ product, index = 0, featured = false }) => {
       </Link>
     </motion.div>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;

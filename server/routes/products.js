@@ -158,12 +158,12 @@ router.get('/:identifier', async (req, res, next) => {
       product = await Product.findOne({ 
         _id: identifier, 
         status: 'active' 
-      }).select('-__v');
+      }).select('-__v').lean();
     } else {
       product = await Product.findOne({ 
         slug: identifier, 
         status: 'active' 
-      }).select('-__v');
+      }).select('-__v').lean();
     }
 
     if (!product) {

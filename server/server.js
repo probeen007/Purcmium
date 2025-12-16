@@ -25,33 +25,39 @@ const app = express();
 // Trust proxy for rate limiting (development environment)
 app.set('trust proxy', 1);
 
-// Security middleware
+// Security middleware (optimized for Vercel)
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'"],
-    },
-  },
+  contentSecurityPolicy: false, // Disable heavy CSP for better performance
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
+// CORS configuration with multiple origins support
+const allowedOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie'],
+  maxAge: 86400 // 24 hours
 }));
 
-// Rate limiting (more lenient in development)
+// Global rate limiter - more restrictive
 const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: process.env.NODE_ENV === 'development' ? 1000 : (process.env.MAX_REQUESTS_PER_MINUTE || 100),
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: process.env.NODE_ENV === 'development' ? 1000 : 100, // 100 requests per 15 min
   message: {
     success: false,
     error: {
@@ -66,10 +72,11 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Stricter rate limiting for auth endpoints (more lenient in development)
+// Stricter rate limiting for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'development' ? 100 : 5, // More attempts in development
+  max: process.env.NODE_ENV === 'development' ? 100 : 5,
+  skipSuccessfulRequests: true, // Don't count successful logins
   message: {
     success: false,
     error: {
@@ -82,9 +89,24 @@ const authLimiter = rateLimit({
   skip: process.env.NODE_ENV === 'development' ? (req) => req.ip === '127.0.0.1' || req.ip === '::1' : undefined
 });
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Tracking endpoints rate limiter - more lenient
+const trackingLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 50, // 50 tracking events per minute
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many tracking requests'
+    }
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Body parsing middleware (reduced limits for Vercel)
+app.use(express.json({ limit: '1mb' })); // Reduced from 10mb
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Cookie parser
 app.use(cookieParser());
@@ -104,7 +126,7 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/track', trackingRoutes);
+app.use('/api/track', trackingLimiter, trackingRoutes);
 app.use('/api/admin', adminRoutes);
 
 // 404 handler for API routes
@@ -135,15 +157,17 @@ const connectDB = async () => {
     console.log('🔄 Connecting to MongoDB Atlas...');
     console.log('🌐 Database: purcmium (Atlas Cloud)');
     
+    // Optimized for Vercel serverless (low memory, fast connections)
     const conn = await mongoose.connect(atlasUri, {
-      serverSelectionTimeoutMS: 15000, // Increased timeout for Atlas
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000, // Faster timeout for serverless
+      socketTimeoutMS: 10000, // Reduced socket timeout
       bufferCommands: false,
       retryWrites: true,
       w: 'majority',
-      maxPoolSize: 10,
-      minPoolSize: 2,
-      maxIdleTimeMS: 30000,
+      maxPoolSize: 3, // Smaller pool for serverless (saves memory)
+      minPoolSize: 1, // Minimal connections
+      maxIdleTimeMS: 10000, // Close idle connections faster
+      connectTimeoutMS: 5000, // Quick connection timeout
     });
     
     console.log(`✅ MongoDB Atlas Connected Successfully!`);
@@ -216,29 +240,21 @@ process.on('uncaughtException', (err) => {
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received. Shutting down gracefully...');
   
-  if (process.mongod) {
-    console.log('🧹 Stopping MongoDB Memory Server...');
-    await process.mongod.stop();
-  }
-  
-  mongoose.connection.close(() => {
-    console.log('MongoDB connection closed.');
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed.');
+  process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down server...');
   
-  if (process.mongod) {
-    console.log('🧹 Cleaning up MongoDB Memory Server...');
-    await process.mongod.stop();
-  }
-  
   await mongoose.connection.close();
   console.log('✅ Server shutdown complete');
   process.exit(0);
 });
+
+// Prevent memory leaks
+process.setMaxListeners(15);
 
 startServer().catch(console.error);
 

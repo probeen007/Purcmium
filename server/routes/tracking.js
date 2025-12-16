@@ -38,10 +38,10 @@ router.post('/click', validate(trackClickSchema), async (req, res, next) => {
     // Increment click count
     await product.incrementClicks();
 
-    // Log click for analytics (in a real app, you might want to store detailed click data)
-    console.log(`Product click tracked: ${product.title} (ID: ${productId})`);
-    console.log(`Referrer: ${referrer || 'Direct'}`);
-    console.log(`User Agent: ${userAgent || 'Unknown'}`);
+    // Log click for analytics (only in development)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`Product click tracked: ${product.title} (ID: ${productId})`);
+    }
 
     res.status(200).json({
       success: true,
@@ -93,9 +93,10 @@ router.post('/conversion', async (req, res, next) => {
     // Increment conversion count
     await product.incrementConversions();
 
-    // Log conversion for analytics
-    console.log(`Conversion tracked: ${product.title} (ID: ${productId})`);
-    console.log(`Conversion Value: ${conversionValue || 'Unknown'}`);
+    // Log conversion for analytics (only in development)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`Conversion tracked: ${product.title} (ID: ${productId})`);
+    }
 
     res.status(200).json({
       success: true,

@@ -166,6 +166,13 @@ productSchema.index({ tags: 1 });
 productSchema.index({ featured: 1, createdAt: -1 });
 productSchema.index({ status: 1, createdAt: -1 });
 
+// Compound indexes for common queries
+productSchema.index({ status: 1, featured: 1, createdAt: -1 });
+productSchema.index({ status: 1, clicks: -1 });
+productSchema.index({ status: 1, conversions: -1 });
+productSchema.index({ categories: 1, status: 1 });
+productSchema.index({ slug: 1, status: 1 });
+
 // Virtual for conversion rate
 productSchema.virtual('conversionRate').get(function() {
   return this.clicks > 0 ? ((this.conversions / this.clicks) * 100).toFixed(2) : 0;
@@ -240,14 +247,18 @@ productSchema.pre('save', async function(next) {
 productSchema.statics.findFeatured = function(limit = 8) {
   return this.find({ featured: true, status: 'active' })
     .sort({ createdAt: -1 })
-    .limit(limit);
+    .limit(limit)
+    .select('-__v')
+    .lean(); // Safe: just returning data to client, no virtuals needed
 };
 
 // Static method to find latest products
 productSchema.statics.findLatest = function(limit = 12) {
   return this.find({ status: 'active' })
     .sort({ createdAt: -1 })
-    .limit(limit);
+    .limit(limit)
+    .select('-__v')
+    .lean(); // Safe: just returning data to client, no virtuals needed
 };
 
 // Static method for search with pagination
