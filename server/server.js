@@ -123,14 +123,19 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes
-app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/track', trackingLimiter, trackingRoutes);
-app.use('/api/admin', adminRoutes);
+// Determine route prefix based on environment
+// In Vercel, /api is handled by routing, so we don't need it here
+// In local dev, we need /api prefix
+const apiPrefix = process.env.VERCEL ? '' : '/api';
 
-// 404 handler for API routes
-app.use('/api/*', (req, res) => {
+// API routes
+app.use(`${apiPrefix}/auth`, authLimiter, authRoutes);
+app.use(`${apiPrefix}/products`, productRoutes);
+app.use(`${apiPrefix}/track`, trackingLimiter, trackingRoutes);
+app.use(`${apiPrefix}/admin`, adminRoutes);
+
+// 404 handler for all routes
+app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
     error: {
