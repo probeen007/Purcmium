@@ -140,6 +140,23 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Setup endpoint (call this once after deployment to create admin)
+app.get('/setup', async (req, res) => {
+  try {
+    await createAdmin();
+    res.status(200).json({
+      success: true,
+      message: 'Setup completed. Admin user created if not exists.',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // API routes (always use /api prefix)
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
