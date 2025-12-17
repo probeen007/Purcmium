@@ -120,12 +120,18 @@ adminSchema.pre('save', async function(next) {
 // Instance method to check password
 adminSchema.methods.comparePassword = async function(candidatePassword) {
   if (!candidatePassword || !this.passwordHash) {
+    console.log('❌ Missing password or hash');
     return false;
   }
   
   try {
-    return await bcrypt.compare(candidatePassword, this.passwordHash);
+    console.log('🔑 Comparing password length:', candidatePassword.length);
+    console.log('🔑 Hash length:', this.passwordHash.length);
+    const result = await bcrypt.compare(candidatePassword, this.passwordHash);
+    console.log('🔑 Bcrypt compare result:', result);
+    return result;
   } catch (error) {
+    console.log('❌ Bcrypt compare error:', error.message);
     return false;
   }
 };

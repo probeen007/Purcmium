@@ -26,6 +26,7 @@ const createAdmin = async () => {
       lastName: 'User'
     };
     
+    console.log('🔧 Creating admin with password length:', adminPassword.length);
     await Admin.createAdmin(adminData);
     console.log('✅ Default admin user created successfully');
     console.log(`📧 Email: ${adminEmail}`);
