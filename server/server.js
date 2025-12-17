@@ -33,15 +33,20 @@ const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
   : ['http://localhost:3000', 'http://127.0.0.1:3000'];
 
+console.log('🔐 Allowed CORS origins:', allowedOrigins);
+
 app.use(cors({
   origin: function (origin, callback) {
+    console.log('🌍 Request from origin:', origin);
+    
     // Allow requests with no origin (mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+      console.log('❌ Origin not allowed:', origin);
+      return callback(null, false);
     }
+    console.log('✅ Origin allowed:', origin);
     return callback(null, true);
   },
   credentials: true,
