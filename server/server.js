@@ -171,6 +171,67 @@ app.get('/reset-admin', async (req, res) => {
   }
 });
 
+// Seed sample products (for development/testing)
+app.get('/seed-products', async (req, res) => {
+  try {
+    const Product = require('./models/Product');
+    
+    const sampleProducts = [
+      {
+        title: 'Premium Wireless Headphones',
+        description: 'High-quality wireless headphones with noise cancellation',
+        price: 299.99,
+        affiliateLink: 'https://example.com/headphones',
+        network: 'Amazon Associates',
+        categories: ['Electronics', 'Audio'],
+        status: 'active',
+        featured: true,
+        clicks: 150,
+        conversions: 12
+      },
+      {
+        title: 'Smart Watch Pro',
+        description: 'Advanced fitness tracking smartwatch',
+        price: 399.99,
+        affiliateLink: 'https://example.com/smartwatch',
+        network: 'ShareASale',
+        categories: ['Electronics', 'Wearables'],
+        status: 'active',
+        featured: true,
+        clicks: 200,
+        conversions: 18
+      },
+      {
+        title: 'Laptop Stand Ergonomic',
+        description: 'Adjustable aluminum laptop stand',
+        price: 49.99,
+        affiliateLink: 'https://example.com/laptop-stand',
+        network: 'CJ Affiliate',
+        categories: ['Office', 'Accessories'],
+        status: 'active',
+        clicks: 89,
+        conversions: 7
+      }
+    ];
+    
+    await Product.deleteMany({});
+    const products = await Product.insertMany(sampleProducts);
+    
+    res.status(200).json({
+      success: true,
+      message: `${products.length} sample products created successfully`,
+      data: { count: products.length },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Seed products error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // API routes (always use /api prefix)
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);

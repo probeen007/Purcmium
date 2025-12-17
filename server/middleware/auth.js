@@ -7,6 +7,9 @@ const protect = async (req, res, next) => {
   try {
     let token;
 
+    console.log('🔐 Auth check - Cookies:', Object.keys(req.cookies || {}));
+    console.log('🔐 Auth check - Has token cookie:', !!req.cookies?.token);
+
     // Get token from cookies
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
@@ -14,6 +17,7 @@ const protect = async (req, res, next) => {
 
     // Make sure token exists
     if (!token || token === 'none') {
+      console.log('❌ No token found in cookies');
       return res.status(401).json({
         success: false,
         error: {
@@ -23,14 +27,18 @@ const protect = async (req, res, next) => {
       });
     }
 
+    console.log('✅ Token found, verifying...');
+
     try {
       // Verify token
       const decoded = verifyToken(token);
+      console.log('✅ Token verified for admin:', decoded.email);
       
       // Get admin from database
       const admin = await Admin.findById(decoded.id);
       
       if (!admin) {
+        console.log('❌ Admin not found in database:', decoded.id);
         return res.status(401).json({
           success: false,
           error: {
@@ -42,6 +50,7 @@ const protect = async (req, res, next) => {
 
       // Check if admin is active
       if (!admin.isActive) {
+        console.log('❌ Admin account inactive:', admin.email);
         return res.status(401).json({
           success: false,
           error: {
