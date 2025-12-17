@@ -140,23 +140,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Setup endpoint (call this once after deployment to create admin)
-app.get('/setup', async (req, res) => {
-  try {
-    await createAdmin();
-    res.status(200).json({
-      success: true,
-      message: 'Setup completed. Admin user created if not exists.',
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
 // API routes (always use /api prefix)
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
@@ -222,7 +205,10 @@ const connectDB = async () => {
       console.log('✅ MongoDB reconnected successfully');
     });
     
-    await createAdmin();
+    // Don't call createAdmin here for serverless (called separately in ensureDBConnection)
+    if (require.main === module) {
+      await createAdmin();
+    }
     
   } catch (error) {
     console.error('❌ MongoDB Atlas connection failed:', error.message);
@@ -310,4 +296,14 @@ const handler = async (req, res) => {
   return app(req, res);
 };
 
-module.exports = handler;
+module.exports = handler;let adminCreated = false;
+
+const ensureDBConnection = async () => {
+  if (!dbConnected) {
+    await connectDB();
+    dbConnected = true;
+  }
+  // Ensure admin is created after DB connection
+  if (!adminCreated) {
+    await createAdmin();
+    adminCrea
