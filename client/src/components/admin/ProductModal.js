@@ -95,6 +95,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       affiliateLinks: [...prev.affiliateLinks, {
         url: '',
         network: '',
+        price: '',
         label: '',
         isPrimary: false
       }]
@@ -125,6 +126,23 @@ const ProductModal = ({ product, onClose, onSave }) => {
       newLinks.forEach((link, i) => {
         link.isPrimary = i === index;
       });
+    } else if (field === 'price') {
+      // Handle price as number
+      newLinks[index][field] = value;
+      
+      // Auto-calculate main price as minimum
+      const prices = newLinks
+        .map(link => parseFloat(link.price))
+        .filter(p => !isNaN(p) && p > 0);
+      
+      if (prices.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          price: Math.min(...prices).toString(),
+          affiliateLinks: newLinks
+        }));
+        return;
+      }
     } else {
       newLinks[index][field] = value;
     }
@@ -173,7 +191,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
           }
         }
         
-
+        if (!link.network.trim()) {
+          newErrors[`affiliateLinks.${index}.network`] = 'Network name is required';
+        }
+        
+        if (!link.price || isNaN(link.price) || parseFloat(link.price) <= 0) {
+          newErrors[`affiliateLinks.${index}.price`] = 'Valid price is required';
+        }
       });
     }
 
@@ -390,23 +414,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price * ($)
+                  Price * (₹) - Auto-calculated
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={formData.price}
-                  onChange={(e) => handleInputChange('price', e.target.value)}
-                  className={`input-field ${errors.price ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
-                  placeholder="0.00"
+                  readOnly
+                  className="input-field bg-gray-50 cursor-not-allowed"
+                  placeholder="Will be set to lowest affiliate price"
                 />
-                {errors.price && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.price}
-                  </p>
-                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  Automatically set to the lowest price from affiliate links
+                </p>
               </div>
 
               <div>
@@ -592,15 +613,41 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       {/* Network */}
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">
-                          Network
+                          Network *
                         </label>
                         <input
                           type="text"
                           value={link.network}
                           onChange={(e) => updateAffiliateLink(index, 'network', e.target.value)}
-                          className="input-field text-sm"
+                          className={`input-field text-sm ${errors[`affiliateLinks.${index}.network`] ? 'border-red-300' : ''}`}
                           placeholder="e.g. Amazon, ShareASale"
                         />
+                        {errors[`affiliateLinks.${index}.network`] && (
+                          <p className="mt-1 text-xs text-red-600">
+                            {errors[`affiliateLinks.${index}.network`]}
+                          </p>
+                        )}
+                      </div>
+                      
+                      {/* Price */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Price (₹) *
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={link.price}
+                          onChange={(e) => updateAffiliateLink(index, 'price', e.target.value)}
+                          className={`input-field text-sm ${errors[`affiliateLinks.${index}.price`] ? 'border-red-300' : ''}`}
+                          placeholder="Enter price"
+                        />
+                        {errors[`affiliateLinks.${index}.price`] && (
+                          <p className="mt-1 text-xs text-red-600">
+                            {errors[`affiliateLinks.${index}.price`]}
+                          </p>
+                        )}
                       </div>
                       
                       {/* Custom Label */}

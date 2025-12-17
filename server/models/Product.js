@@ -85,6 +85,11 @@ const productSchema = new mongoose.Schema({
       trim: true,
       maxlength: [100, 'Network name cannot exceed 100 characters']
     },
+    price: {
+      type: Number,
+      required: [true, 'Price is required for this affiliate link'],
+      min: [0, 'Price cannot be negative']
+    },
     label: {
       type: String,
       trim: true,
@@ -192,6 +197,7 @@ productSchema.pre('save', async function(next) {
     this.affiliateLinks = [{
       url: this.affiliateUrl,
       network: 'Unknown',
+      price: this.price || 0,
       label: 'Buy Now',
       isPrimary: true
     }];
@@ -200,6 +206,17 @@ productSchema.pre('save', async function(next) {
   // Ensure at least one affiliate link exists
   if (!this.affiliateLinks || this.affiliateLinks.length === 0) {
     return next(new Error('At least one affiliate link is required'));
+  }
+  
+  // Calculate main price as minimum of all affiliate link prices
+  if (this.affiliateLinks && this.affiliateLinks.length > 0) {
+    const prices = this.affiliateLinks
+      .filter(link => link.price != null && link.price >= 0)
+      .map(link => link.price);
+    
+    if (prices.length > 0) {
+      this.price = Math.min(...prices);
+    }
   }
   
   // Ensure only one primary link

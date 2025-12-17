@@ -298,19 +298,28 @@ const ProductDetail = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleAffiliateClick(link.url, link.network)}
-                        className={`text-lg px-8 py-4 inline-flex items-center justify-between rounded-lg border-2 transition-all ${
+                        className={`px-6 py-4 inline-flex items-center justify-between rounded-lg border-2 transition-all ${
                           link.isPrimary
                             ? 'btn-gold border-gold-500'
                             : 'bg-white border-gray-300 text-gray-700 hover:border-primary-300 hover:bg-primary-50'
                         }`}
                       >
-                        <div className="flex items-center">
-                          <ShoppingCart className="w-5 h-5 mr-2" />
-                          {link.label || `Buy on ${link.network || 'Store'}`}
+                        <div className="flex items-center gap-3">
+                          <ShoppingCart className="w-5 h-5" />
+                          <div className="flex flex-col items-start">
+                            <span className="font-semibold text-base">
+                              {link.network || 'Store'}
+                            </span>
+                            <span className="text-xs opacity-70">
+                              {link.label || `Buy on ${link.network || 'Store'}`}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center text-sm opacity-70">
-                          {link.network && <span className="mr-2">{link.network}</span>}
-                          <ExternalLink className="w-4 h-4" />
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-xl text-primary-600">
+                            {formatCurrency(link.price || 0)}
+                          </span>
+                          <ExternalLink className="w-4 h-4 opacity-70" />
                         </div>
                       </motion.button>
                     ))}

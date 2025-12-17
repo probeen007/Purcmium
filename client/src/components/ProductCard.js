@@ -134,7 +134,9 @@ const ProductCard = memo(({ product, index = 0, featured = false }) => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
               <span className={`font-bold text-primary-600 ${featured ? 'text-2xl' : 'text-xl'}`}>
-                {formatCurrency(product.price)}
+                {product.affiliateLinks && product.affiliateLinks.length > 1 
+                  ? `From ${formatCurrency(product.price)}` 
+                  : formatCurrency(product.price)}
               </span>
               {product.clicks > 0 && (
                 <span className="text-xs text-gray-500 flex items-center">
