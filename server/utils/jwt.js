@@ -44,7 +44,8 @@ const sendTokenResponse = (admin, statusCode, res) => {
           role: admin.role,
           fullName: admin.fullName,
           lastLogin: admin.lastLogin
-        }
+        },
+        token // Return token in response body for localStorage
       }
     });
 };
