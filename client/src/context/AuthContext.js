@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 
 // Initial state
@@ -91,9 +91,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
       
-      const response = await axios.get('/api/auth/check', {
-        withCredentials: true
-      });
+      const response = await api.get('/auth/check');
 
       if (response.data.success && response.data.data.isAuthenticated) {
         dispatch({
@@ -115,9 +113,7 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
       dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
 
-      const response = await axios.post('/api/auth/login', credentials, {
-        withCredentials: true
-      });
+      const response = await api.post('/auth/login', credentials);
 
       if (response.data.success) {
         dispatch({
@@ -144,9 +140,7 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout', {}, {
-        withCredentials: true
-      });
+      await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -158,9 +152,7 @@ export const AuthProvider = ({ children }) => {
   // Get current admin info
   const getCurrentAdmin = async () => {
     try {
-      const response = await axios.get('/api/auth/me', {
-        withCredentials: true
-      });
+      const response = await api.get('/auth/me');
 
       if (response.data.success) {
         dispatch({
