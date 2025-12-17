@@ -288,20 +288,7 @@ if (require.main === module) {
 
 // For Vercel serverless - connect to DB on first request
 let dbConnected = false;
-const ensureDBConnection = async () => {
-  if (!dbConnected) {
-    await connectDB();
-    dbConnected = true;
-  }
-};
-
-// Wrap app to ensure DB connection for serverless
-const handler = async (req, res) => {
-  await ensureDBConnection();
-  return app(req, res);
-};
-
-module.exports = handler;let adminCreated = false;
+let adminCreated = false;
 
 const ensureDBConnection = async () => {
   if (!dbConnected) {
@@ -311,4 +298,15 @@ const ensureDBConnection = async () => {
   // Ensure admin is created after DB connection
   if (!adminCreated) {
     await createAdmin();
-    adminCrea
+    adminCreated = true;
+  }
+};
+
+// Wrap app to ensure DB connection for serverless
+const handler = async (req, res) => {
+  await ensureDBConnection();
+  return app(req, res);
+};
+
+module.exports = handler;
+
