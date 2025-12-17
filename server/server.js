@@ -145,6 +145,32 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Admin reset endpoint (for development/debugging only)
+app.get('/reset-admin', async (req, res) => {
+  try {
+    const Admin = require('./models/Admin');
+    
+    // Delete existing admin
+    await Admin.deleteMany({});
+    console.log('🗑️ Deleted all admin accounts');
+    
+    // Create new admin
+    await createAdmin();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Admin account reset successfully. Use credentials from environment variables to login.',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Reset admin error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // API routes (always use /api prefix)
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
