@@ -13,10 +13,13 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    console.log('🔐 Login attempt:', email);
+
     // Find admin with password field
     const admin = await Admin.findByEmailWithPassword(email);
 
     if (!admin) {
+      console.log('❌ Admin not found:', email);
       return res.status(401).json({
         success: false,
         error: {
@@ -26,8 +29,11 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
       });
     }
 
+    console.log('✅ Admin found:', email);
+
     // Check if account is locked
     if (admin.isLocked) {
+      console.log('🔒 Account locked:', email);
       return res.status(401).json({
         success: false,
         error: {
@@ -39,6 +45,7 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
 
     // Check if account is active
     if (!admin.isActive) {
+      console.log('❌ Account inactive:', email);
       return res.status(401).json({
         success: false,
         error: {
@@ -49,7 +56,9 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
     }
 
     // Check password
+    console.log('🔑 Checking password...');
     const isMatch = await admin.comparePassword(password);
+    console.log('🔑 Password match:', isMatch);
 
     if (!isMatch) {
       // Increment login attempts
@@ -67,10 +76,13 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
     // Reset login attempts on successful login
     await admin.resetLoginAttempts();
 
+    console.log('✅ Login successful:', email);
+
     // Send token response
     sendTokenResponse(admin, 200, res);
 
   } catch (error) {
+    console.error('❌ Login error:', error);
     next(error);
   }
 });
