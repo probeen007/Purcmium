@@ -111,6 +111,9 @@ app.use(cookieParser());
 // Data sanitization against NoSQL injection
 app.use(mongoSanitize());
 
+// Handle OPTIONS requests for CORS preflight
+app.options('*', cors());
+
 // Root route
 app.get('/', (req, res) => {
   res.status(200).json({
