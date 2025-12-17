@@ -8,16 +8,20 @@ const protect = async (req, res, next) => {
     let token;
 
     console.log('🔐 Auth check - Cookies:', Object.keys(req.cookies || {}));
-    console.log('🔐 Auth check - Has token cookie:', !!req.cookies?.token);
+    console.log('🔐 Auth check - Authorization header:', req.headers.authorization?.substring(0, 20) + '...');
 
-    // Get token from cookies
-    if (req.cookies && req.cookies.token) {
+    // Get token from Authorization header OR cookies
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.substring(7);
+      console.log('✅ Token from Authorization header');
+    } else if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
+      console.log('✅ Token from cookie');
     }
 
     // Make sure token exists
     if (!token || token === 'none') {
-      console.log('❌ No token found in cookies');
+      console.log('❌ No token found in header or cookies');
       return res.status(401).json({
         success: false,
         error: {

@@ -19,7 +19,11 @@ if (process.env.NODE_ENV === 'production' && !process.env.REACT_APP_API_URL) {
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add any auth headers if needed
+    // Add token from localStorage to Authorization header
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {

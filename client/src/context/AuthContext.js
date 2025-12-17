@@ -116,6 +116,11 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', credentials);
 
       if (response.data.success) {
+        // Store token in localStorage
+        if (response.data.data.token) {
+          localStorage.setItem('token', response.data.data.token);
+        }
+        
         dispatch({
           type: AUTH_ACTIONS.LOGIN_SUCCESS,
           payload: response.data.data.admin
@@ -144,6 +149,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      // Clear token from localStorage
+      localStorage.removeItem('token');
+      
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
       toast.success('Logged out successfully');
     }
