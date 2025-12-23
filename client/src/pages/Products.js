@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productsAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
+import { formatCurrency } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import { Search, Grid, List, Star, ExternalLink, RefreshCw } from 'lucide-react';
 
@@ -219,11 +220,11 @@ const Products = () => {
           <div className={viewMode === 'list' ? 'text-right' : ''}>
             <div className="mb-3">
               <div className="text-lg font-bold text-gray-800">
-                ${product.price}
+                {formatCurrency(product.price)}
               </div>
               {product.originalPrice && (
                 <div className="text-sm text-gray-500 line-through">
-                  ${product.originalPrice}
+                  {formatCurrency(product.originalPrice)}
                 </div>
               )}
             </div>

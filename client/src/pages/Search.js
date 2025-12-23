@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productsAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
+import { formatCurrency } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import { Search, Filter, Star, ExternalLink, TrendingUp } from 'lucide-react';
 
@@ -208,7 +209,7 @@ const SearchPage = () => {
         <div className="flex justify-between items-center">
           <div>
             <div className="text-lg font-bold text-gray-800">
-              ${product.price}
+              {formatCurrency(product.price)}
             </div>
           </div>
 
@@ -226,32 +227,32 @@ const SearchPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container-custom py-8">
+      <div className="container-custom py-6 md:py-8 px-4">
         {/* Search Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-navy-800 mb-4">
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-navy-800 mb-3 md:mb-4">
             Search Products
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm md:text-base text-gray-600 px-4">
             Find exactly what you're looking for from our premium collection
           </p>
         </div>
 
         {/* Search Form */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-6 md:mb-8">
           <form onSubmit={handleSearchSubmit} className="mb-4">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+              <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 md:w-6 md:h-6" />
               <input
                 type="text"
-                placeholder="Search for products, brands, or categories..."
+                placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-20 py-4 text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 md:pl-12 pr-16 md:pr-20 py-3 md:py-4 text-base md:text-lg border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent touch-manipulation"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-primary px-6 py-2"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-primary px-3 md:px-6 py-1.5 md:py-2 text-xs md:text-sm touch-manipulation"
               >
                 Search
               </button>
@@ -354,7 +355,7 @@ const SearchPage = () => {
                         placeholder="Max"
                         value={priceRange.max}
                         onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                        className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                        className="flex-1 px-2 md:px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm md:text-base touch-manipulation min-h-[44px]"
                       />
                     </div>
                   </div>
@@ -363,12 +364,12 @@ const SearchPage = () => {
             </AnimatePresence>
 
             {/* Filter Actions */}
-            <div className="flex justify-between items-center mt-4">
-              <div className="flex gap-4">
-                <button onClick={handleSearch} className="btn-primary">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 md:gap-4 mt-4">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
+                <button onClick={handleSearch} className="btn-primary touch-manipulation">
                   Apply Filters
                 </button>
-                <button onClick={clearFilters} className="btn-secondary">
+                <button onClick={clearFilters} className="btn-secondary touch-manipulation">
                   Clear All
                 </button>
               </div>
@@ -376,7 +377,7 @@ const SearchPage = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="px-3 md:px-4 py-2.5 md:py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm md:text-base touch-manipulation min-h-[44px]"
               >
                 <option value="relevance">Sort by Relevance</option>
                 <option value="latest">Latest</option>
@@ -393,13 +394,13 @@ const SearchPage = () => {
         {loading && (
           <div className="text-center py-12">
             <div className="spinner mx-auto mb-4"></div>
-            <p className="text-gray-600">Searching...</p>
+            <p className="text-sm md:text-base text-gray-600">Searching...</p>
           </div>
         )}
 
         {error && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 mb-4">{error}</p>
+          <div className="text-center py-12 px-4">
+            <p className="text-sm md:text-base text-gray-600 mb-4">{error}</p>
             <button onClick={handleSearch} className="btn-primary">
               Try Again
             </button>
@@ -407,8 +408,8 @@ const SearchPage = () => {
         )}
 
         {!loading && !error && searchTerm && (
-          <div className="mb-6">
-            <p className="text-gray-600">
+          <div className="mb-4 md:mb-6 px-4">
+            <p className="text-sm md:text-base text-gray-600">
               {products.length === 0 
                 ? `No results found for "${searchTerm}"`
                 : `Found ${products.length} result${products.length === 1 ? '' : 's'} for "${searchTerm}"`
@@ -422,7 +423,7 @@ const SearchPage = () => {
           {products.length > 0 && (
             <motion.div
               layout
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
             >
               {products.map((product) => (
                 <ProductCard key={product._id} product={product} />
@@ -433,24 +434,24 @@ const SearchPage = () => {
 
         {/* No Results */}
         {!loading && searchTerm && products.length === 0 && (
-          <div className="text-center py-16">
+          <div className="text-center py-12 md:py-16 px-4">
             <div className="mb-6">
-              <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              <Search className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg md:text-xl font-semibold text-gray-700 mb-2">
                 No products found
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-sm md:text-base text-gray-500 mb-6">
                 Try adjusting your search terms or filters
               </p>
             </div>
             
-            <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
               <button
                 onClick={() => {
                   setSearchTerm('');
                   clearFilters();
                 }}
-                className="btn-secondary mr-4"
+                className="btn-secondary"
               >
                 Clear Search
               </button>
