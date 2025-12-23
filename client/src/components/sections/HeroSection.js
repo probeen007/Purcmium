@@ -25,12 +25,12 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center bg-hero-gradient overflow-hidden">
+    <section className="relative min-h-[85vh] md:min-h-screen flex items-center bg-hero-gradient overflow-hidden py-12 md:py-0">
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gold-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 md:top-20 left-5 md:left-10 w-40 md:w-72 h-40 md:h-72 bg-gold-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-48 md:w-96 h-48 md:h-96 bg-primary-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-white/5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Floating Elements */}
@@ -69,26 +69,26 @@ const HeroSection = () => {
         </div>
       </motion.div>
 
-      <div className="container-custom relative z-10">
+      <div className="container-custom relative z-10 px-4">
         <div className="max-w-4xl mx-auto text-center text-white">
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="space-y-8"
+            className="space-y-6 md:space-y-8"
           >
             {/* Badge */}
             <motion.div variants={fadeInUp}>
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-6">
-                <Sparkles className="w-4 h-4 text-gold-400" />
-                <span className="text-sm font-medium">Premium Products Await</span>
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 md:px-6 md:py-2 mb-4 md:mb-6">
+                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-gold-400" />
+                <span className="text-xs md:text-sm font-medium">Premium Products Await</span>
               </div>
             </motion.div>
 
             {/* Main Heading */}
             <motion.h1 
               variants={fadeInUp}
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
             >
               Discover{' '}
               <span className="relative">
@@ -109,28 +109,30 @@ const HeroSection = () => {
             {/* CTA Buttons */}
             <motion.div 
               variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 mt-6 md:mt-8 px-4"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
               >
                 <Link 
                   to="/products?topSelling=true"
-                  className="btn-gold text-lg px-8 py-4 inline-flex items-center"
+                  className="btn-gold text-base md:text-lg px-6 md:px-8 py-3 md:py-4 inline-flex items-center justify-center w-full sm:w-auto"
                 >
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Shop Top Selling Products
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                  <span className="truncate">Shop Top Selling</span>
                 </Link>
               </motion.div>
 
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
               >
                 <Link 
                   to="/products"
-                  className="btn-secondary bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4"
+                  className="btn-secondary bg-white/10 border-white/30 text-white hover:bg-white/20 text-base md:text-lg px-6 md:px-8 py-3 md:py-4 w-full sm:w-auto inline-flex items-center justify-center"
                 >
                   Browse All Products
                 </Link>

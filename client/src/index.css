@@ -164,6 +164,23 @@
   .bg-gold-gradient {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
   }
+  
+  /* Touch-friendly utilities */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Mobile-optimized spacing */
+  @media (max-width: 640px) {
+    .mobile-compact-spacing {
+      @apply space-y-3;
+    }
+    
+    .mobile-compact-padding {
+      @apply p-3;
+    }
+  }
 }
 
 /* Custom animations */
@@ -183,6 +200,51 @@
 
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile for better performance */
+  .animate-float,
+  .hover-lift {
+    animation: none;
+    transform: none;
+  }
+  
+  /* Optimize images for mobile */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+  
+  /* Better touch targets */
+  button, a, input[type="checkbox"], input[type="radio"] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  /* Prevent zooming on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container-custom {
+    @apply px-6;
+  }
 }
 
 /* Dark mode support (for future implementation) */

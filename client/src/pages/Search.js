@@ -263,14 +263,14 @@ const SearchPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="w-4 h-4 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">Popular Searches:</span>
+                <span className="text-xs md:text-sm font-medium text-gray-600">Popular Searches:</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 md:gap-2">
                 {popularSearches.map((term) => (
                   <button
                     key={term}
                     onClick={() => handlePopularSearch(term)}
-                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                    className="px-2.5 md:px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs md:text-sm rounded-full transition-colors touch-manipulation min-h-[32px]"
                   >
                     {term}
                   </button>
@@ -280,15 +280,15 @@ const SearchPage = () => {
           )}
 
           {/* Advanced Filters */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-100">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4 touch-manipulation min-h-[44px] text-sm md:text-base"
             >
               <Filter className="w-4 h-4" />
               Advanced Filters
               {(selectedCategories.length > 0 || selectedNetworks.length > 0 || priceRange.min || priceRange.max) && (
-                <span className="bg-primary-100 text-primary-600 text-xs px-2 py-1 rounded-full">
+                <span className="bg-primary-100 text-primary-600 text-xs px-2 py-0.5 md:py-1 rounded-full">
                   Active
                 </span>
               )}
@@ -300,21 +300,21 @@ const SearchPage = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="grid md:grid-cols-3 gap-6"
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
                 >
                   {/* Categories */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Categories</h3>
-                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                    <h3 className="font-semibold text-gray-800 mb-2 md:mb-3 text-sm md:text-base">Categories</h3>
+                    <div className="space-y-1.5 md:space-y-2 max-h-40 md:max-h-32 overflow-y-auto">
                       {categories.map((category) => (
-                        <label key={category} className="flex items-center">
+                        <label key={category} className="flex items-center touch-manipulation min-h-[36px]">
                           <input
                             type="checkbox"
                             checked={selectedCategories.includes(category)}
                             onChange={() => toggleCategory(category)}
-                            className="mr-2 text-primary-500 focus:ring-primary-500"
+                            className="mr-2 text-primary-500 focus:ring-primary-500 w-4 h-4"
                           />
-                          <span className="text-sm text-gray-700">{category}</span>
+                          <span className="text-xs md:text-sm text-gray-700">{category}</span>
                         </label>
                       ))}
                     </div>
@@ -322,17 +322,17 @@ const SearchPage = () => {
 
                   {/* Networks */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Networks</h3>
-                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                    <h3 className="font-semibold text-gray-800 mb-2 md:mb-3 text-sm md:text-base">Networks</h3>
+                    <div className="space-y-1.5 md:space-y-2 max-h-40 md:max-h-32 overflow-y-auto">
                       {networks.map((network) => (
-                        <label key={network} className="flex items-center">
+                        <label key={network} className="flex items-center touch-manipulation min-h-[36px]">
                           <input
                             type="checkbox"
                             checked={selectedNetworks.includes(network)}
                             onChange={() => toggleNetwork(network)}
-                            className="mr-2 text-primary-500 focus:ring-primary-500"
+                            className="mr-2 text-primary-500 focus:ring-primary-500 w-4 h-4"
                           />
-                          <span className="text-sm text-gray-700">{network}</span>
+                          <span className="text-xs md:text-sm text-gray-700">{network}</span>
                         </label>
                       ))}
                     </div>
@@ -340,14 +340,14 @@ const SearchPage = () => {
 
                   {/* Price Range */}
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Price Range</h3>
+                    <h3 className="font-semibold text-gray-800 mb-2 md:mb-3 text-sm md:text-base">Price Range</h3>
                     <div className="flex gap-2">
                       <input
                         type="number"
                         placeholder="Min"
                         value={priceRange.min}
                         onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                        className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                        className="flex-1 px-2 md:px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm md:text-base touch-manipulation min-h-[44px]"
                       />
                       <input
                         type="number"

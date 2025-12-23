@@ -77,19 +77,20 @@ const CTASection = () => {
         className="relative z-10 text-center text-white"
       >
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 md:gap-6">
           <motion.div
             variants={buttonVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
           >
             <Link 
               to="/products?topSelling=true"
-              className="btn-gold text-lg px-8 py-4 inline-flex items-center shadow-2xl"
+              className="btn-gold text-base md:text-lg px-6 md:px-8 py-3 md:py-4 inline-flex items-center justify-center shadow-2xl w-full sm:w-auto"
             >
-              <ShoppingBag className="w-5 h-5 mr-2" />
+              <ShoppingBag className="w-4 h-4 md:w-5 md:h-5 mr-2" />
               Start Shopping Now
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
             </Link>
           </motion.div>
 
@@ -97,10 +98,11 @@ const CTASection = () => {
             variants={buttonVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
           >
             <Link 
               to="/products"
-              className="bg-white/10 hover:bg-white/20 border-2 border-white/30 text-white hover:border-white/50 font-medium py-4 px-8 rounded-lg transition-all duration-200 ease-in-out text-lg inline-flex items-center backdrop-blur-sm"
+              className="bg-white/10 hover:bg-white/20 border-2 border-white/30 text-white hover:border-white/50 font-medium py-3 md:py-4 px-6 md:px-8 rounded-lg transition-all duration-200 ease-in-out text-base md:text-lg inline-flex items-center justify-center backdrop-blur-sm w-full sm:w-auto touch-manipulation min-h-[52px]"
             >
               Browse Categories
             </Link>

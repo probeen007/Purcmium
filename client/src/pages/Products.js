@@ -147,22 +147,22 @@ const Products = () => {
       }`}
     >
       {/* Product Image */}
-      <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-48' : 'aspect-square'}`}>
+      <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-32 sm:w-48' : 'aspect-square'}`}>
         <img
           src={product.images?.[0] || '/api/placeholder/400/400'}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {product.topSelling && (
-          <div className="absolute top-3 left-3">
-            <span className="bg-gold-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+          <div className="absolute top-2 left-2">
+            <span className="bg-gold-500 text-white text-[10px] md:text-xs font-semibold px-2 py-0.5 md:py-1 rounded-full">
               Top Selling
             </span>
           </div>
         )}
         {product.discount && (
-          <div className="absolute top-3 right-3">
-            <span className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+          <div className="absolute top-2 right-2">
+            <span className="bg-red-500 text-white text-[10px] md:text-xs font-semibold px-2 py-0.5 md:py-1 rounded-full">
               -{product.discount}%
             </span>
           </div>
@@ -170,7 +170,7 @@ const Products = () => {
       </div>
 
       {/* Product Info */}
-      <div className={`p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+      <div className={`p-3 md:p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}>
         <div className={viewMode === 'list' ? 'flex justify-between items-start' : ''}>
           <div className={viewMode === 'list' ? 'flex-1 pr-4' : ''}>
             <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
@@ -260,15 +260,15 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container-custom py-8">
+      <div className="container-custom py-6 md:py-8 px-4">
         {/* Header */}
-        <div className="mb-8 relative">
+        <div className="mb-6 md:mb-8 relative">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl md:text-4xl font-serif font-bold text-navy-800 mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-navy-800 mb-2 md:mb-4">
                 All Products
               </h1>
-              <p className="text-gray-600">
+              <p className="text-sm md:text-base text-gray-600">
                 Discover our complete collection of premium products
               </p>
             </div>
@@ -277,7 +277,7 @@ const Products = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-gray-50"
+              className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-gray-50 touch-manipulation min-h-[44px] min-w-[44px]"
               title="Refresh products from database"
             >
               <RefreshCw 
@@ -290,28 +290,29 @@ const Products = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
+        <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-6 md:mb-8">
+          <div className="flex flex-col gap-4">
             {/* Search */}
             <form onSubmit={handleSearch} className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                 <input
                   type="text"
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pl-9 md:pl-10 pr-4 py-2.5 md:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm md:text-base touch-manipulation"
                 />
               </div>
             </form>
 
-            {/* Category Filter */}
-            <div className="flex gap-4">
+            {/* Filters Row */}
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              {/* Category Filter */}
               <select
                 value={selectedCategory}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="flex-1 sm:flex-none px-3 md:px-4 py-2.5 md:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm md:text-base touch-manipulation min-h-[44px]"
               >
                 <option value="all">All Categories</option>
                 {categories.map((category) => (
@@ -322,7 +323,7 @@ const Products = () => {
               </select>
 
               {/* Top Selling Toggle */}
-              <label className="flex items-center px-4 py-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex-1 sm:flex-none flex items-center px-3 md:px-4 py-2.5 md:py-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation min-h-[44px]">
                 <input
                   type="checkbox"
                   checked={topSellingOnly}
@@ -332,14 +333,14 @@ const Products = () => {
                   }}
                   className="mr-2 text-primary-500 focus:ring-primary-500"
                 />
-                <span className="text-sm text-gray-700">Top Selling Only</span>
+                <span className="text-xs md:text-sm text-gray-700 whitespace-nowrap">Top Selling Only</span>
               </label>
 
               {/* Sort */}
               <select
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="flex-1 sm:flex-none px-3 md:px-4 py-2.5 md:py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm md:text-base touch-manipulation min-h-[44px]"
               >
                 <option value="latest">Latest</option>
                 <option value="name">Name A-Z</option>
@@ -348,17 +349,17 @@ const Products = () => {
                 <option value="rating">Rating</option>
               </select>
 
-              {/* View Mode */}
-              <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+              {/* View Mode - Hidden on mobile */}
+              <div className="hidden sm:flex border border-gray-200 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-3 ${viewMode === 'grid' ? 'bg-primary-500 text-white' : 'text-gray-400'}`}
+                  className={`p-2.5 md:p-3 touch-manipulation ${viewMode === 'grid' ? 'bg-primary-500 text-white' : 'text-gray-400'}`}
                 >
                   <Grid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-3 ${viewMode === 'list' ? 'bg-primary-500 text-white' : 'text-gray-400'}`}
+                  className={`p-2.5 md:p-3 touch-manipulation ${viewMode === 'list' ? 'bg-primary-500 text-white' : 'text-gray-400'}`}
                 >
                   <List className="w-5 h-5" />
                 </button>
@@ -368,7 +369,7 @@ const Products = () => {
 
           {/* Results Count */}
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-            <div className="text-sm text-gray-600">
+            <div className="text-xs md:text-sm text-gray-600">
               Showing {products.length} of {totalProducts} products
             </div>
           </div>
@@ -380,9 +381,8 @@ const Products = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-16"
-            >
-              <p className="text-gray-600 mb-4">{error}</p>
+              className="text-center py-12 md:py-16 px-4">
+              <p className="text-sm md:text-base text-gray-600 mb-4">{error}</p>
               <button onClick={loadProducts} className="btn-primary">
                 Try Again
               </button>
@@ -391,9 +391,8 @@ const Products = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-16"
-            >
-              <p className="text-gray-600 mb-4">No products found</p>
+              className="text-center py-12 md:py-16 px-4">
+              <p className="text-sm md:text-base text-gray-600 mb-4">No products found</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
@@ -411,7 +410,7 @@ const Products = () => {
               layout
               className={`${
                 viewMode === 'grid'
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6'
                   : 'space-y-4'
               }`}
             >

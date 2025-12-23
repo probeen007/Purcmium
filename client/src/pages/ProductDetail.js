@@ -126,23 +126,23 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="bg-white border-b">
-        <div className="container-custom py-4">
+        <div className="container-custom py-3 md:py-4 px-4">
           <motion.nav
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center space-x-2 text-sm"
+            className="flex items-center space-x-2 text-xs md:text-sm overflow-x-auto scrollbar-hide"
           >
-            <Link to="/" className="text-primary-600 hover:text-primary-700">
+            <Link to="/" className="text-primary-600 hover:text-primary-700 whitespace-nowrap">
               Home
             </Link>
             <span className="text-gray-400">/</span>
             {product.categories && product.categories[0] && (
               <>
-                <span className="text-gray-600">{product.categories[0]}</span>
+                <span className="text-gray-600 whitespace-nowrap">{product.categories[0]}</span>
                 <span className="text-gray-400">/</span>
               </>
             )}
-            <span className="text-gray-800 font-medium truncate">
+            <span className="text-gray-800 font-medium truncate max-w-[150px] md:max-w-none">
               {product.title}
             </span>
           </motion.nav>
@@ -150,7 +150,7 @@ const ProductDetail = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container-custom py-8 lg:py-12">
+      <div className="container-custom py-6 md:py-8 lg:py-12 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,13 +159,13 @@ const ProductDetail = () => {
           {/* Back Button */}
           <Link 
             to="/"
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-8 group"
+            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 md:mb-8 group touch-manipulation"
           >
             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Products
           </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-12 md:mb-16">
             {/* Product Images */}
             <div className="space-y-4">
               {/* Main Image */}
@@ -192,7 +192,7 @@ const ProductDetail = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border-2 transition-colors touch-manipulation ${
+                      className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden border-2 transition-colors touch-manipulation ${
                         selectedImageIndex === index
                           ? 'border-primary-500'
                           : 'border-gray-200 hover:border-gray-300'
@@ -213,49 +213,49 @@ const ProductDetail = () => {
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Badges */}
               {product.topSelling && (
-                <div className="mb-4">
-                  <span className="inline-flex items-center bg-gradient-to-r from-gold-500 to-gold-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    <Star className="w-4 h-4 mr-1" />
+                <div className="mb-3 md:mb-4">
+                  <span className="inline-flex items-center bg-gradient-to-r from-gold-500 to-gold-600 text-white px-2.5 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-semibold">
+                    <Star className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                     Top Selling
                   </span>
                 </div>
               )}
 
               {/* Title */}
-              <h1 className="text-3xl lg:text-4xl font-serif font-bold text-navy-800">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-navy-800 leading-tight">
                 {product.title}
               </h1>
 
               {/* Short Description */}
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
                 {product.shortDescription}
               </p>
 
               {/* Price */}
-              <div className="flex items-center space-x-4">
-                <span className="text-4xl font-bold text-primary-600">
+              <div className="flex items-center space-x-3 md:space-x-4">
+                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary-600">
                   {formatCurrency(product.price)}
                 </span>
                 {product.clicks > 0 && (
                   <div className="flex items-center text-gray-500">
-                    <TrendingUp className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{product.clicks} clicks</span>
+                    <TrendingUp className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                    <span className="text-xs md:text-sm">{product.clicks} clicks</span>
                   </div>
                 )}
               </div>
 
               {/* Categories & Tags */}
               {(product.categories?.length > 0 || product.tags?.length > 0) && (
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {product.categories?.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
                       {product.categories.map((category, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                          className="inline-flex items-center bg-gray-100 text-gray-700 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm"
                         >
                           <Tag className="w-3 h-3 mr-1" />
                           {category}
@@ -265,11 +265,11 @@ const ProductDetail = () => {
                   )}
                   
                   {product.tags?.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
                       {product.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full"
+                          className="text-xs md:text-sm text-primary-600 bg-primary-50 px-2 py-0.5 md:py-1 rounded-full"
                         >
                           #{tag}
                         </span>
@@ -280,24 +280,24 @@ const ProductDetail = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {/* Multiple Affiliate Links */}
                 {product.affiliateLinks && product.affiliateLinks.length > 0 ? (
-                  <div className="grid gap-3">
+                  <div className="grid gap-2 md:gap-3">
                     {product.affiliateLinks.map((link, index) => (
                       <motion.button
                         key={index}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleAffiliateClick(link.url, link.network)}
-                        className={`px-6 py-4 inline-flex items-center justify-between rounded-lg border-2 transition-all ${
+                        className={`px-4 md:px-6 py-3 md:py-4 inline-flex items-center justify-between rounded-lg border-2 transition-all touch-manipulation min-h-[52px] ${
                           link.isPrimary
                             ? 'btn-gold border-gold-500'
                             : 'bg-white border-gray-300 text-gray-700 hover:border-primary-300 hover:bg-primary-50'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <ShoppingCart className="w-5 h-5" />
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
                           <div className="flex flex-col items-start">
                             <span className="font-semibold text-base">
                               {link.network || 'Store'}

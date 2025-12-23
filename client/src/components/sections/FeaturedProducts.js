@@ -26,7 +26,7 @@ const FeaturedProducts = ({ products = [] }) => {
   };
 
   return (
-    <div className="container-custom">
+    <div className="container-custom px-4">
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -34,11 +34,11 @@ const FeaturedProducts = ({ products = [] }) => {
         viewport={{ once: true }}
       >
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <motion.div variants={titleVariants}>
-            <div className="inline-flex items-center space-x-2 bg-primary-100 rounded-full px-4 py-2 mb-4">
-              <Star className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-semibold text-primary-700">
+            <div className="inline-flex items-center space-x-2 bg-primary-100 rounded-full px-3 py-1.5 md:px-4 md:py-2 mb-3 md:mb-4">
+              <Star className="w-3 h-3 md:w-4 md:h-4 text-primary-600" />
+              <span className="text-xs md:text-sm font-semibold text-primary-700">
                 Handpicked for You
               </span>
             </div>
@@ -46,7 +46,7 @@ const FeaturedProducts = ({ products = [] }) => {
 
           <motion.h2 
             variants={titleVariants}
-            className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-navy-800 mb-6"
+            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold text-navy-800 mb-4 md:mb-6 px-4"
           >
             Top Selling{' '}
             <span className="text-gradient">Premium</span>{' '}
@@ -55,7 +55,7 @@ const FeaturedProducts = ({ products = [] }) => {
 
           <motion.p 
             variants={titleVariants}
-            className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
+            className="text-sm md:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-4"
           >
             Discover our carefully curated selection of the finest products. 
             Each item is handpicked for its exceptional quality and value.
@@ -64,7 +64,7 @@ const FeaturedProducts = ({ products = [] }) => {
 
         {/* Products Grid */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12">
             {products.map((product, index) => (
               <ProductCard
                 key={product._id}

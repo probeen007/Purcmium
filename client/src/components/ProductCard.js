@@ -57,27 +57,27 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
       whileInView="visible"
       whileHover="hover"
       viewport={{ once: true, margin: "-50px" }}
-      className={`group relative ${topSelling ? 'lg:col-span-2 lg:row-span-2' : ''}`}
+      className={`group relative ${topSelling ? 'md:col-span-2 md:row-span-2' : ''}`}
     >
       <Link to={`/product/${product.slug || product._id}`} onClick={handleProductClick}>
         <motion.div
           variants={hoverVariants}
           className={`card-premium overflow-hidden h-full ${
-            topSelling ? 'min-h-[400px] lg:min-h-[500px]' : 'min-h-[350px]'
+            topSelling ? 'min-h-[320px] md:min-h-[400px] lg:min-h-[500px]' : 'min-h-[300px] md:min-h-[350px]'
           }`}
         >
         {/* Top Selling Badge */}
         {product.topSelling && (
-          <div className="absolute top-4 left-4 z-10">
-            <div className="bg-gradient-to-r from-gold-500 to-gold-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center">
-              <Star className="w-3 h-3 mr-1" />
+          <div className="absolute top-2 left-2 md:top-4 md:left-4 z-10">
+            <div className="bg-gradient-to-r from-gold-500 to-gold-600 text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-semibold flex items-center">
+              <Star className="w-2.5 h-2.5 md:w-3 md:h-3 mr-0.5 md:mr-1" />
               Top Selling
             </div>
           </div>
         )}
 
         {/* Product Image */}
-        <div className={`relative overflow-hidden ${topSelling ? 'h-64 lg:h-80' : 'h-48'}`}>
+        <div className={`relative overflow-hidden ${topSelling ? 'h-48 md:h-64 lg:h-80' : 'h-40 md:h-48'}`}>
           <img
             src={product.images[0] || '/api/placeholder/400/300'}
             alt={product.title}
@@ -93,7 +93,7 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
         </div>
 
         {/* Product Info */}
-        <div className={`p-6 ${topSelling ? 'lg:p-8' : ''}`}>
+        <div className={`p-3 md:p-4 ${topSelling ? 'lg:p-6 xl:p-8' : 'lg:p-6'}`}>
           {/* Categories */}
           {product.categories && product.categories.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
