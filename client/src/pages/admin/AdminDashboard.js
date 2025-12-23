@@ -7,7 +7,7 @@ import {
   ShoppingBag,
   Eye,
   MousePointerClick,
-  DollarSign,
+  Coins,
   Plus,
   ArrowUpRight,
   Calendar,
@@ -183,7 +183,7 @@ const AdminDashboard = () => {
           <MetricsCard
             title="Est. Revenue"
             value={formatCurrency(overview.estimatedRevenue)}
-            icon={DollarSign}
+            icon={Coins}
             color="gold"
             trend="This period"
           />

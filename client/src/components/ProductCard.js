@@ -5,7 +5,7 @@ import { Star, Tag, TrendingUp } from 'lucide-react';
 import { formatCurrency } from '../utils/helpers';
 import { trackingAPI } from '../utils/api';
 
-const ProductCard = memo(({ product, index = 0, featured = false }) => {
+const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
   const handleProductClick = async () => {
     try {
       // Track click
@@ -57,36 +57,27 @@ const ProductCard = memo(({ product, index = 0, featured = false }) => {
       whileInView="visible"
       whileHover="hover"
       viewport={{ once: true, margin: "-50px" }}
-      className={`group relative ${featured ? 'lg:col-span-2 lg:row-span-2' : ''}`}
+      className={`group relative ${topSelling ? 'lg:col-span-2 lg:row-span-2' : ''}`}
     >
       <Link to={`/product/${product.slug || product._id}`} onClick={handleProductClick}>
         <motion.div
           variants={hoverVariants}
           className={`card-premium overflow-hidden h-full ${
-            featured ? 'min-h-[400px] lg:min-h-[500px]' : 'min-h-[350px]'
+            topSelling ? 'min-h-[400px] lg:min-h-[500px]' : 'min-h-[350px]'
           }`}
         >
-        {/* Featured Badge */}
-        {product.featured && (
+        {/* Top Selling Badge */}
+        {product.topSelling && (
           <div className="absolute top-4 left-4 z-10">
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center">
               <Star className="w-3 h-3 mr-1" />
-              Featured
-            </div>
-          </div>
-        )}
-
-        {/* Multiple Links Badge */}
-        {product.affiliateLinks && product.affiliateLinks.length > 1 && (
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-navy-800/90 backdrop-blur-sm text-white px-2 py-1 rounded text-xs font-medium">
-              {product.affiliateLinks.length} Links
+              Top Selling
             </div>
           </div>
         )}
 
         {/* Product Image */}
-        <div className={`relative overflow-hidden ${featured ? 'h-64 lg:h-80' : 'h-48'}`}>
+        <div className={`relative overflow-hidden ${topSelling ? 'h-64 lg:h-80' : 'h-48'}`}>
           <img
             src={product.images[0] || '/api/placeholder/400/300'}
             alt={product.title}
@@ -102,7 +93,7 @@ const ProductCard = memo(({ product, index = 0, featured = false }) => {
         </div>
 
         {/* Product Info */}
-        <div className={`p-6 ${featured ? 'lg:p-8' : ''}`}>
+        <div className={`p-6 ${topSelling ? 'lg:p-8' : ''}`}>
           {/* Categories */}
           {product.categories && product.categories.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
@@ -120,20 +111,20 @@ const ProductCard = memo(({ product, index = 0, featured = false }) => {
 
           {/* Title */}
           <h3 className={`font-semibold text-navy-800 mb-2 group-hover:text-primary-600 transition-colors duration-200 ${
-            featured ? 'text-xl lg:text-2xl' : 'text-lg'
+            topSelling ? 'text-xl lg:text-2xl' : 'text-lg'
           } line-clamp-2`}>
             {product.title}
           </h3>
 
           {/* Short Description */}
-          <p className={`text-gray-600 mb-4 ${featured ? 'text-base' : 'text-sm'} line-clamp-2`}>
+          <p className={`text-gray-600 mb-4 ${topSelling ? 'text-base' : 'text-sm'} line-clamp-2`}>
             {product.shortDescription}
           </p>
 
           {/* Price and Stats */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
-              <span className={`font-bold text-primary-600 ${featured ? 'text-2xl' : 'text-xl'}`}>
+              <span className={`font-bold text-primary-600 ${topSelling ? 'text-2xl' : 'text-xl'}`}>
                 {product.affiliateLinks && product.affiliateLinks.length > 1 
                   ? `From ${formatCurrency(product.price)}` 
                   : formatCurrency(product.price)}

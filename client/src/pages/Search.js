@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { productsAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
 import toast from 'react-hot-toast';
-import { Search, Filter, X, Star, ExternalLink, TrendingUp, RefreshCw } from 'lucide-react';
+import { Search, Filter, Star, ExternalLink, TrendingUp } from 'lucide-react';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,26 +37,6 @@ const SearchPage = () => {
     'Gaming', 'Beauty', 'Health', 'Travel', 'Food'
   ];
 
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch();
-    }
-    loadFilters();
-  }, []);
-
-  useEffect(() => {
-    // Update URL params when filters change
-    const params = new URLSearchParams();
-    if (searchTerm) params.set('q', searchTerm);
-    if (selectedCategories.length) params.set('categories', selectedCategories.join(','));
-    if (selectedNetworks.length) params.set('networks', selectedNetworks.join(','));
-    if (priceRange.min) params.set('min_price', priceRange.min);
-    if (priceRange.max) params.set('max_price', priceRange.max);
-    if (sortBy !== 'relevance') params.set('sort', sortBy);
-    
-    setSearchParams(params);
-  }, [searchTerm, selectedCategories, selectedNetworks, priceRange, sortBy, setSearchParams]);
-
   const loadFilters = async () => {
     try {
       const [categoriesRes, networksRes] = await Promise.all([
@@ -82,43 +62,43 @@ const SearchPage = () => {
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      const params = {
+    try {
+      const response = await productsAPI.searchProducts({
         search: searchTerm,
         categories: selectedCategories.length ? selectedCategories : undefined,
-        // Note: networks is not supported in the backend, using categories instead
+        networks: selectedNetworks.length ? selectedNetworks : undefined,
         minPrice: priceRange.min || undefined,
         maxPrice: priceRange.max || undefined,
-        sortBy: sortBy === 'relevance' ? 'createdAt' : sortBy,
-        sortOrder: 'desc',
-        limit: 20
-      };
-      
-      // Remove undefined values
-      Object.keys(params).forEach(key => {
-        if (params[key] === undefined) {
-          delete params[key];
-        }
+        sortBy
       });
 
-      const response = await productsAPI.getProducts(params);
-      
       if (response.data.success) {
-        const { products } = response.data.data;
-        setProducts(products || []);
+        setProducts(response.data.data.products);
       }
     } catch (error) {
       console.error('Error searching products:', error);
       const { message } = handleApiError(error);
       setError(message);
-      toast.error('Search failed');
+      toast.error('Failed to search products');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      handleSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, selectedCategories, selectedNetworks, priceRange, sortBy]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -168,10 +148,10 @@ const SearchPage = () => {
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {product.featured && (
+        {product.topSelling && (
           <div className="absolute top-3 left-3">
             <span className="bg-gold-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-              Featured
+              Top Selling
             </span>
           </div>
         )}

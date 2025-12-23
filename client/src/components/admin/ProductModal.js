@@ -632,7 +632,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       {/* Price */}
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">
-                          Price (₹) *
+                          Price (NPR) *
                         </label>
                         <input
                           type="number"

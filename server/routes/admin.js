@@ -19,7 +19,7 @@ router.get('/metrics', protect, adminOnly, async (req, res, next) => {
     const [
       totalProducts,
       activeProducts,
-      featuredProducts,
+      topSellingProducts,
       totalClicks,
       totalConversions,
       recentProducts
@@ -30,8 +30,8 @@ router.get('/metrics', protect, adminOnly, async (req, res, next) => {
       // Active products count
       Product.countDocuments({ status: 'active' }),
       
-      // Featured products count
-      Product.countDocuments({ featured: true, status: 'active' }),
+      // Top Selling products count
+      Product.countDocuments({ topSelling: true, status: 'active' }),
       
       // Total clicks across all products
       Product.aggregate([
@@ -141,7 +141,7 @@ router.get('/metrics', protect, adminOnly, async (req, res, next) => {
         overview: {
           totalProducts,
           activeProducts,
-          featuredProducts,
+          topSellingProducts,
           recentProducts,
           totalClicks,
           totalConversions,
@@ -188,7 +188,7 @@ router.get('/products/:id/performance', protect, adminOnly, async (req, res, nex
       title: product.title,
       slug: product.slug,
       status: product.status,
-      featured: product.featured,
+      topSelling: product.topSelling,
       network: product.network,
       price: product.price,
       clicks: product.clicks,

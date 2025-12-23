@@ -19,7 +19,7 @@ const Products = () => {
   // Filters and search
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
-  const [featuredOnly, setFeaturedOnly] = useState(searchParams.get('featured') === 'true');
+  const [topSellingOnly, setTopSellingOnly] = useState(searchParams.get('topSelling') === 'true');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'latest');
   const [viewMode, setViewMode] = useState('grid');
   
@@ -42,7 +42,7 @@ const Products = () => {
         limit: 12,
         search: searchTerm || undefined,
         categories: selectedCategory !== 'all' ? selectedCategory : undefined,
-        featured: featuredOnly || undefined,
+        topSelling: topSellingOnly || undefined,
         sortBy: sortBy === 'latest' ? 'createdAt' : sortBy,
         sortOrder: 'desc'
       };
@@ -73,7 +73,7 @@ const Products = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [currentPage, searchTerm, selectedCategory, featuredOnly, sortBy]);
+  }, [currentPage, searchTerm, selectedCategory, topSellingOnly, sortBy]);
 
   const handleRefresh = useCallback(() => {
     loadProducts();
@@ -111,12 +111,12 @@ const Products = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set('search', searchTerm);
     if (selectedCategory !== 'all') params.set('category', selectedCategory);
-    if (featuredOnly) params.set('featured', 'true');
+    if (topSellingOnly) params.set('topSelling', 'true');
     if (sortBy !== 'latest') params.set('sort', sortBy);
     if (currentPage > 1) params.set('page', currentPage.toString());
     
     setSearchParams(params);
-  }, [searchTerm, selectedCategory, sortBy, currentPage, featuredOnly, setSearchParams]);
+  }, [searchTerm, selectedCategory, sortBy, currentPage, topSellingOnly, setSearchParams]);
 
 
 
@@ -153,10 +153,10 @@ const Products = () => {
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {product.featured && (
+        {product.topSelling && (
           <div className="absolute top-3 left-3">
             <span className="bg-gold-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-              Featured
+              Top Selling
             </span>
           </div>
         )}
@@ -321,18 +321,18 @@ const Products = () => {
                 ))}
               </select>
 
-              {/* Featured Toggle */}
+              {/* Top Selling Toggle */}
               <label className="flex items-center px-4 py-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                 <input
                   type="checkbox"
-                  checked={featuredOnly}
+                  checked={topSellingOnly}
                   onChange={(e) => {
-                    setFeaturedOnly(e.target.checked);
+                    setTopSellingOnly(e.target.checked);
                     setCurrentPage(1);
                   }}
                   className="mr-2 text-primary-500 focus:ring-primary-500"
                 />
-                <span className="text-sm text-gray-700">Featured Only</span>
+                <span className="text-sm text-gray-700">Top Selling Only</span>
               </label>
 
               {/* Sort */}
@@ -398,7 +398,7 @@ const Products = () => {
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
-                  setFeaturedOnly(false);
+                  setTopSellingOnly(false);
                   setSortBy('latest');
                 }}
                 className="btn-secondary"

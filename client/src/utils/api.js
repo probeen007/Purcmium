@@ -69,7 +69,7 @@ export const authAPI = {
 export const productsAPI = {
   // Public endpoints
   getProducts: (params = {}) => api.get('/products', { params }),
-  getFeaturedProducts: (limit = 8) => api.get('/products/featured', { params: { limit } }),
+  getTopSellingProducts: (limit = 8) => api.get('/products/top-selling', { params: { limit } }),
   getLatestProducts: (limit = 12) => api.get('/products/latest', { params: { limit } }),
   getProduct: (identifier) => api.get(`/products/${identifier}`),
   getCategories: () => api.get('/products/meta/categories'),

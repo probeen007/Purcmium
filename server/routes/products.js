@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
       search,
       categories,
       tags,
-      featured,
+      topSelling,
       sortBy,
       sortOrder
     } = value;
@@ -54,9 +54,9 @@ router.get('/', async (req, res, next) => {
       query.tags = { $in: tagArray };
     }
 
-    // Featured filter
-    if (featured !== undefined) {
-      query.featured = featured;
+    // Top Selling filter
+    if (topSelling !== undefined) {
+      query.topSelling = topSelling;
     }
 
     // Build sort object
@@ -102,14 +102,14 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// @desc    Get featured products
-// @route   GET /api/products/featured
+// @desc    Get top selling products
+// @route   GET /api/products/top-selling
 // @access  Public
-router.get('/featured', async (req, res, next) => {
+router.get('/top-selling', async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 8;
     
-    const products = await Product.findFeatured(limit);
+    const products = await Product.findTopSelling(limit);
 
     res.status(200).json({
       success: true,
@@ -391,8 +391,8 @@ router.post('/search', async (req, res, next) => {
         sortObj = { createdAt: -1 };
         break;
       default:
-        // Relevance - prioritize featured, then by creation date
-        sortObj = { featured: -1, createdAt: -1 };
+        // Relevance - prioritize top selling, then by creation date
+        sortObj = { topSelling: -1, createdAt: -1 };
     }
 
     // Execute query
@@ -436,7 +436,7 @@ router.get('/admin/all', protect, adminOnly, async (req, res, next) => {
       search,
       categories,
       tags,
-      featured,
+      topSelling,
       sortBy,
       sortOrder
     } = value;
@@ -466,9 +466,9 @@ router.get('/admin/all', protect, adminOnly, async (req, res, next) => {
       query.tags = { $in: tagArray };
     }
 
-    // Featured filter
-    if (featured !== undefined) {
-      query.featured = featured;
+    // Top Selling filter
+    if (topSelling !== undefined) {
+      query.topSelling = topSelling;
     }
 
     // Build sort object

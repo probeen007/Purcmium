@@ -113,8 +113,8 @@ const LatestProducts = ({ products = [] }) => {
             <p className="text-gray-500 mb-6">
               We're constantly adding new products to our collection. Check back soon for the latest additions.
             </p>
-            <Link to="/#featured" className="btn-primary">
-              View Featured Products
+            <Link to="/#top-selling" className="btn-primary">
+              View Top Selling Products
             </Link>
           </motion.div>
         )}

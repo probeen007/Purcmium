@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, Star, TrendingUp, Shield } from 'lucide-react';
+import { Sparkles, Star } from 'lucide-react';
 
 const HeroSection = () => {
   const fadeInUp = {
@@ -23,24 +23,6 @@ const HeroSection = () => {
       }
     }
   };
-
-  const features = [
-    {
-      icon: Star,
-      title: "Premium Quality",
-      description: "Curated products from trusted brands"
-    },
-    {
-      icon: TrendingUp,
-      title: "Best Deals",
-      description: "Exclusive offers and competitive prices"
-    },
-    {
-      icon: Shield,
-      title: "Secure Shopping",
-      description: "Safe and protected transactions"
-    }
-  ];
 
   return (
     <section className="relative min-h-screen flex items-center bg-hero-gradient overflow-hidden">
@@ -124,15 +106,6 @@ const HeroSection = () => {
               Products That Matter
             </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p 
-              variants={fadeInUp}
-              className="text-lg md:text-xl lg:text-2xl text-gray-200 max-w-2xl mx-auto leading-relaxed"
-            >
-              Curated selection of the finest products from trusted brands. 
-              Find exactly what you need with exclusive deals and premium quality guaranteed.
-            </motion.p>
-
             {/* CTA Buttons */}
             <motion.div 
               variants={fadeInUp}
@@ -143,11 +116,11 @@ const HeroSection = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link 
-                  to="/products?featured=true"
+                  to="/products?topSelling=true"
                   className="btn-gold text-lg px-8 py-4 inline-flex items-center"
                 >
                   <Sparkles className="w-5 h-5 mr-2" />
-                  Shop Featured Products
+                  Shop Top Selling Products
                 </Link>
               </motion.div>
 
@@ -162,47 +135,6 @@ const HeroSection = () => {
                   Browse All Products
                 </Link>
               </motion.div>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div 
-              variants={fadeInUp}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 pt-8 border-t border-white/20"
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  variants={fadeInUp}
-                  className="text-center group"
-                >
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl mb-4 group-hover:bg-white/20 transition-colors duration-300">
-                    <feature.icon className="w-6 h-6 text-gold-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-gray-300 text-sm">{feature.description}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div 
-              variants={fadeInUp}
-              className="flex justify-center items-center space-x-8 mt-12 pt-8"
-            >
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-gold-400">10K+</div>
-                <div className="text-sm text-gray-300">Happy Customers</div>
-              </div>
-              <div className="w-px h-12 bg-white/20"></div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-gold-400">50K+</div>
-                <div className="text-sm text-gray-300">Products Sold</div>
-              </div>
-              <div className="w-px h-12 bg-white/20"></div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-gold-400">98%</div>
-                <div className="text-sm text-gray-300">Satisfaction Rate</div>
-              </div>
             </motion.div>
           </motion.div>
         </div>

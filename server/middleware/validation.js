@@ -226,7 +226,7 @@ const createProductSchema = Joi.object({
       'array.max': 'Maximum 10 tags allowed'
     }),
   
-  featured: Joi.boolean()
+  topSelling: Joi.boolean()
     .default(false),
   
   metaTitle: Joi.string()
@@ -282,7 +282,7 @@ const productQuerySchema = Joi.object({
       Joi.array().items(Joi.string())
     ),
   
-  featured: Joi.boolean(),
+  topSelling: Joi.boolean(),
   
   sortBy: Joi.string()
     .valid('createdAt', 'updatedAt', 'title', 'price', 'clicks', 'conversions')

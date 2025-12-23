@@ -78,7 +78,7 @@ const NotFound = () => {
             <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-primary-600 rounded-full mr-3"></div>
-                Check out our featured products
+                Check out our top selling products
               </div>
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-primary-600 rounded-full mr-3"></div>

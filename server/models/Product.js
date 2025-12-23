@@ -116,7 +116,7 @@ const productSchema = new mongoose.Schema({
     maxlength: [30, 'Tag cannot exceed 30 characters']
   }],
   
-  featured: {
+  topSelling: {
     type: Boolean,
     default: false,
     index: true
@@ -168,11 +168,11 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ title: 'text', shortDescription: 'text', description: 'text' });
 productSchema.index({ categories: 1 });
 productSchema.index({ tags: 1 });
-productSchema.index({ featured: 1, createdAt: -1 });
+productSchema.index({ topSelling: 1, createdAt: -1 });
 productSchema.index({ status: 1, createdAt: -1 });
 
 // Compound indexes for common queries
-productSchema.index({ status: 1, featured: 1, createdAt: -1 });
+productSchema.index({ status: 1, topSelling: 1, createdAt: -1 });
 productSchema.index({ status: 1, clicks: -1 });
 productSchema.index({ status: 1, conversions: -1 });
 productSchema.index({ categories: 1, status: 1 });
@@ -260,9 +260,9 @@ productSchema.pre('save', async function(next) {
   next();
 });
 
-// Static method to find featured products
-productSchema.statics.findFeatured = function(limit = 8) {
-  return this.find({ featured: true, status: 'active' })
+// Static method to find top selling products
+productSchema.statics.findTopSelling = function(limit = 8) {
+  return this.find({ topSelling: true, status: 'active' })
     .sort({ createdAt: -1 })
     .limit(limit)
     .select('-__v')
@@ -287,7 +287,7 @@ productSchema.statics.searchProducts = function(query, options = {}) {
     tags = [],
     sortBy = 'createdAt',
     sortOrder = -1,
-    featured = null
+    topSelling = null
   } = options;
   
   const skip = (page - 1) * limit;
@@ -308,9 +308,9 @@ productSchema.statics.searchProducts = function(query, options = {}) {
     searchQuery.tags = { $in: tags };
   }
   
-  // Featured filter
-  if (featured !== null) {
-    searchQuery.featured = featured;
+  // Top Selling filter
+  if (topSelling !== null) {
+    searchQuery.topSelling = topSelling;
   }
   
   const sort = {};

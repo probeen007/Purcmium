@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, ArrowRight, Sparkles } from 'lucide-react';
+import { Star, Sparkles } from 'lucide-react';
 import ProductCard from '../ProductCard';
 
 const FeaturedProducts = ({ products = [] }) => {
@@ -48,7 +48,7 @@ const FeaturedProducts = ({ products = [] }) => {
             variants={titleVariants}
             className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-navy-800 mb-6"
           >
-            Featured{' '}
+            Top Selling{' '}
             <span className="text-gradient">Premium</span>{' '}
             Products
           </motion.h2>
@@ -83,7 +83,7 @@ const FeaturedProducts = ({ products = [] }) => {
               <Sparkles className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              No Featured Products Yet
+              No Top Selling Products Yet
             </h3>
             <p className="text-gray-500 mb-6">
               Our team is working hard to curate the best products for you.
@@ -91,42 +91,6 @@ const FeaturedProducts = ({ products = [] }) => {
             <Link to="/#products" className="btn-primary">
               Browse All Products
             </Link>
-          </motion.div>
-        )}
-
-        {/* Call to Action */}
-        {products.length > 0 && (
-          <motion.div
-            variants={titleVariants}
-            className="text-center"
-          >
-            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8 lg:p-12">
-              <h3 className="text-2xl lg:text-3xl font-serif font-bold text-navy-800 mb-4">
-                Discover More Amazing Products
-              </h3>
-              <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                Explore our full collection and find exactly what you're looking for.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link to="/#products" className="btn-primary inline-flex items-center">
-                    View All Products
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link to="/#categories" className="btn-secondary">
-                    Browse Categories
-                  </Link>
-                </motion.div>
-              </div>
-            </div>
           </motion.div>
         )}
 

@@ -8,7 +8,6 @@ import {
   Tag, 
   TrendingUp, 
   Share2,
-  Heart,
   ShoppingCart,
   Check,
   AlertCircle
@@ -24,7 +23,6 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const loadProduct = useCallback(async () => {
     try {
@@ -86,11 +84,6 @@ const ProductDetail = () => {
       navigator.clipboard.writeText(window.location.href);
       toast.success('Link copied to clipboard!');
     }
-  };
-
-  const toggleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-    toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
   };
 
   if (loading) {
@@ -222,12 +215,11 @@ const ProductDetail = () => {
             {/* Product Info */}
             <div className="space-y-6">
               {/* Badges */}
-              {/* Badges */}
-              {product.featured && (
+              {product.topSelling && (
                 <div className="mb-4">
                   <span className="inline-flex items-center bg-gradient-to-r from-gold-500 to-gold-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     <Star className="w-4 h-4 mr-1" />
-                    Featured
+                    Top Selling
                   </span>
                 </div>
               )}
@@ -343,23 +335,10 @@ const ProductDetail = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={toggleWishlist}
-                    className={`p-4 rounded-lg border-2 transition-colors ${
-                      isWishlisted
-                        ? 'border-red-200 bg-red-50 text-red-600'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-red-200 hover:text-red-600'
-                    }`}
-                  >
-                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                     onClick={handleShare}
-                    className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-600 hover:border-primary-200 hover:text-primary-600 transition-colors"
+                    className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-600 hover:border-primary-200 hover:text-primary-600 transition-colors flex-1"
                   >
-                    <Share2 className="w-5 h-5" />
+                    <Share2 className="w-5 h-5 mx-auto" />
                   </motion.button>
                 </div>
               </div>

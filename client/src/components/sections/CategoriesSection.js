@@ -141,29 +141,6 @@ const CategoriesSection = ({ categories = [] }) => {
             </motion.div>
           ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          variants={titleVariants}
-          className="text-center mt-16"
-        >
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8 lg:p-12">
-            <h3 className="text-2xl font-serif font-bold text-navy-800 mb-4">
-              Can't find what you're looking for?
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Use our search feature or contact us directly. We're here to help you find the perfect product.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button onClick={() => navigate('/search')} className="btn-primary">
-                Search Products
-              </button>
-              <button onClick={() => navigate('/products')} className="btn-secondary">
-                Browse All Products
-              </button>
-            </div>
-          </div>
-        </motion.div>
       </motion.div>
     </div>
   );

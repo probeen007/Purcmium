@@ -9,15 +9,11 @@ import toast from 'react-hot-toast';
 import HeroSection from '../components/sections/HeroSection';
 import FeaturedProducts from '../components/sections/FeaturedProducts';
 import LatestProducts from '../components/sections/LatestProducts';
-import CategoriesSection from '../components/sections/CategoriesSection';
-import StatsSection from '../components/sections/StatsSection';
-import TestimonialsSection from '../components/sections/TestimonialsSection';
 import CTASection from '../components/sections/CTASection';
 
 const Home = () => {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -32,22 +28,17 @@ const Home = () => {
       setError(null);
 
       // Load all home page data in parallel
-      const [featuredRes, latestRes, categoriesRes] = await Promise.all([
-        productsAPI.getFeaturedProducts(8),
-        productsAPI.getLatestProducts(12),
-        productsAPI.getCategories()
+      const [topSellingRes, latestRes] = await Promise.all([
+        productsAPI.getTopSellingProducts(8),
+        productsAPI.getLatestProducts(12)
       ]);
 
-      if (featuredRes.data.success) {
-        setFeaturedProducts(featuredRes.data.data.products);
+      if (topSellingRes.data.success) {
+        setTopSellingProducts(topSellingRes.data.data.products);
       }
 
       if (latestRes.data.success) {
         setLatestProducts(latestRes.data.data.products);
-      }
-
-      if (categoriesRes.data.success) {
-        setCategories(categoriesRes.data.data.categories);
       }
 
       if (showRefreshMsg) {
@@ -136,29 +127,14 @@ const Home = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Featured Products */}
-      <section id="featured" className="py-20 bg-gray-50">
-        <FeaturedProducts products={featuredProducts} />
-      </section>
-
-      {/* Categories */}
-      <section id="categories" className="py-20">
-        <CategoriesSection categories={categories} />
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-primary-600 to-primary-800">
-        <StatsSection />
+      {/* Top Selling Products */}
+      <section id="top-selling" className="py-20 bg-gray-50">
+        <FeaturedProducts products={topSellingProducts} />
       </section>
 
       {/* Latest Products */}
       <section id="products" className="py-20 bg-gray-50">
         <LatestProducts products={latestProducts} />
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20">
-        <TestimonialsSection />
       </section>
 
       {/* CTA Section */}

@@ -185,7 +185,7 @@ app.get('/seed-products', async (req, res) => {
         network: 'Amazon Associates',
         categories: ['Electronics', 'Audio'],
         status: 'active',
-        featured: true,
+        topSelling: true,
         clicks: 150,
         conversions: 12
       },
@@ -197,7 +197,7 @@ app.get('/seed-products', async (req, res) => {
         network: 'ShareASale',
         categories: ['Electronics', 'Wearables'],
         status: 'active',
-        featured: true,
+        topSelling: true,
         clicks: 200,
         conversions: 18
       },
