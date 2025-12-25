@@ -18,6 +18,7 @@ const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
+const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -93,6 +94,12 @@ function App() {
               <Route path="/admin/analytics" element={
                 <ProtectedRoute>
                   <AdminAnalytics />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/admin/categories" element={
+                <ProtectedRoute>
+                  <AdminCategories />
                 </ProtectedRoute>
               } />
               

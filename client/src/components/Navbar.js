@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
   const location = useLocation();
 
   // Handle scroll effect
@@ -23,12 +25,13 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  const navItems = [
-    { name: 'Home', path: '/', isActive: location.pathname === '/' },
-    { name: 'Products', path: '/products', isActive: location.pathname === '/products' },
-    { name: 'Search', path: '/search', isActive: location.pathname === '/search' },
-    { name: 'Categories', path: '/products?view=categories', isActive: false },
-  ];
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
 
   return (
     <>
@@ -38,13 +41,13 @@ const Navbar = () => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
             ? 'bg-white/95 backdrop-blur-lg shadow-lg'
-            : 'bg-transparent'
+            : 'bg-white/90 backdrop-blur-md shadow-md'
         }`}
       >
-        <div className="container-custom">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between gap-4 h-16 lg:h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center space-x-2"
@@ -52,55 +55,56 @@ const Navbar = () => {
                 <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center">
                   <img src="/perciumt.png" alt="Purcmium Logo" className="w-8 h-8 lg:w-10 lg:h-10 object-contain" />
                 </div>
-                <span className="text-xl lg:text-2xl font-serif font-bold text-gradient">
+                <span className="text-xl lg:text-2xl font-serif font-bold text-gradient hidden sm:inline">
                   Purcmium
                 </span>
               </motion.div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`relative py-2 px-1 font-medium transition-colors duration-200 ${
-                    item.isActive
-                      ? 'text-primary-600'
-                      : isScrolled
-                      ? 'text-navy-700 hover:text-primary-600'
-                      : 'text-gray-100 hover:text-gold-300 drop-shadow-sm'
-                  }`}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  {item.isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
-                      initial={false}
-                    />
+            {/* Desktop Advanced Search Bar */}
+            <div className="hidden lg:flex flex-1 max-w-2xl xl:max-w-3xl mx-8">
+              <form onSubmit={handleSearch} className="w-full">
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Search className="w-5 h-5 text-gray-400 group-focus-within:text-primary-600 transition-colors" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for products, brands, categories..."
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl
+                             focus:outline-none focus:border-primary-500 focus:bg-white
+                             transition-all duration-200 text-gray-800 placeholder-gray-400
+                             hover:border-gray-300"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute inset-y-0 right-12 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   )}
-                </Link>
-              ))}
+                  <button
+                    type="submit"
+                    className="absolute inset-y-0 right-0 flex items-center px-4 bg-primary-600 hover:bg-primary-700
+                             text-white rounded-r-xl transition-colors duration-200"
+                  >
+                    <span className="hidden xl:inline mr-2">Search</span>
+                    <Search className="w-4 h-4 xl:hidden" />
+                  </button>
+                </div>
+              </form>
             </div>
 
-            {/* Desktop Search & CTA */}
-            <div className="hidden lg:flex items-center space-x-4">
-              <Link
-                to="/search"
-                className={`p-2 rounded-lg transition-colors duration-200 ${
-                  isScrolled
-                    ? 'text-navy-600 hover:bg-gray-100'
-                    : 'text-gray-100 hover:bg-white/10 drop-shadow-sm'
-                }`}
-              >
-                <Search className="w-5 h-5" />
-              </Link>
-              
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/products"
-                  className="btn-gold text-sm lg:text-base"
+                  className="btn-gold text-sm lg:text-base whitespace-nowrap"
                 >
                   View Products
                 </Link>
@@ -134,32 +138,45 @@ const Navbar = () => {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden bg-white border-t border-gray-200"
             >
-              <div className="container-custom py-4">
+              <div className="container mx-auto px-4 py-4">
                 <div className="flex flex-col space-y-4">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.path}
-                      className={`py-2 px-4 rounded-lg font-medium transition-colors duration-200 ${
-                        item.isActive
-                          ? 'text-primary-600 bg-primary-50'
-                          : 'text-navy-700 hover:text-primary-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {/* Mobile Search Bar */}
+                  <form onSubmit={handleSearch} className="w-full">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search className="w-5 h-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search products, brands..."
+                        className="w-full pl-10 pr-10 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl
+                                 focus:outline-none focus:border-primary-500 focus:bg-white
+                                 transition-all duration-200 text-gray-800 placeholder-gray-400"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchQuery('')}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </form>
                   
-                  <hr className="my-2 border-gray-200" />
+                  <hr className="border-gray-200" />
                   
-                  <div className="flex items-center space-x-3 px-4">
-                    <Link to="/search" className="flex-1 btn-secondary text-sm py-2">
-                      <Search className="w-4 h-4 mr-2" />
-                      Search
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link to="/" className="py-2.5 px-4 rounded-lg font-medium text-center transition-colors duration-200
+                                          bg-gray-50 text-navy-700 hover:bg-gray-100 active:bg-gray-200">
+                      Home
                     </Link>
                     <Link
                       to="/products"
-                      className="flex-1 btn-gold text-sm py-2 text-center"
+                      className="py-2.5 px-4 rounded-lg font-medium text-center btn-gold"
                     >
                       View Products
                     </Link>

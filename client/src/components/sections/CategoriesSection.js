@@ -1,43 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Smartphone, 
-  Shirt, 
-  Home, 
-  Dumbbell, 
-  Book, 
-  Camera,
-  Headphones,
-  Watch
-} from 'lucide-react';
+import api from '../../utils/api';
 
-const CategoriesSection = ({ categories = [] }) => {
+const CategoriesSection = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get('/categories?active=true');
+      if (response.data.success) {
+        setCategories(response.data.data.categories);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/products?category=${encodeURIComponent(categoryName)}`);
   };
-  // Default categories with icons if no categories from API
-  const defaultCategories = [
-    { name: 'Electronics', icon: Smartphone, count: '1.2k', color: 'from-blue-500 to-blue-600' },
-    { name: 'Fashion', icon: Shirt, count: '890', color: 'from-pink-500 to-pink-600' },
-    { name: 'Home & Garden', icon: Home, count: '650', color: 'from-green-500 to-green-600' },
-    { name: 'Sports & Fitness', icon: Dumbbell, count: '420', color: 'from-red-500 to-red-600' },
-    { name: 'Books & Media', icon: Book, count: '320', color: 'from-purple-500 to-purple-600' },
-    { name: 'Photography', icon: Camera, count: '280', color: 'from-yellow-500 to-yellow-600' },
-    { name: 'Audio', icon: Headphones, count: '190', color: 'from-indigo-500 to-indigo-600' },
-    { name: 'Watches', icon: Watch, count: '150', color: 'from-gray-500 to-gray-600' },
-  ];
-
-  const displayCategories = categories.length > 0 
-    ? categories.map((cat, index) => ({
-        name: cat,
-        icon: defaultCategories[index % defaultCategories.length]?.icon || Smartphone,
-        count: Math.floor(Math.random() * 1000) + 100, // Random count for demo
-        color: defaultCategories[index % defaultCategories.length]?.color || 'from-blue-500 to-blue-600'
-      }))
-    : defaultCategories;
 
   const sectionVariants = {
     hidden: { opacity: 0 },
@@ -97,9 +84,9 @@ const CategoriesSection = ({ categories = [] }) => {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
-          {displayCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <motion.div
-              key={category.name}
+              key={category._id}
               variants={cardVariants}
               whileHover={{ 
                 scale: 1.05,
@@ -112,18 +99,26 @@ const CategoriesSection = ({ categories = [] }) => {
             >
               <div className="relative overflow-hidden bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 p-6 lg:p-8">
                 {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 
-                {/* Icon */}
-                <div className={`w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
-                  <category.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
+                {/* Brand Logo */}
+                <div className="w-20 h-20 lg:w-24 lg:h-24 mb-4 mx-auto flex items-center justify-center">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://via.placeholder.com/200/4F46E5/ffffff?text=${category.name.charAt(0)}`;
+                    }}
+                  />
+                </divcategory.productCount} {category.productCount === 1 ? 'product' : 'products'}
+                  </p>
                 </div>
 
-                {/* Category Info */}
-                <div className="text-center">
-                  <h3 className="text-lg lg:text-xl font-semibold text-navy-800 mb-2 group-hover:text-primary-600 transition-colors duration-300">
-                    {category.name}
-                  </h3>
+                {/* Hover Arrow */}
+                <div className="absolute bottom-4 right-4 transform translate-x-8 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center"
                   <p className="text-sm text-gray-500">
                     {typeof category.count === 'string' ? category.count : `${category.count}+`} products
                   </p>

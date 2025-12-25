@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowRight, TrendingUp } from 'lucide-react';
+import { Clock, ChevronRight, TrendingUp, ChevronLeft } from 'lucide-react';
 import ProductCard from '../ProductCard';
 
 const LatestProducts = ({ products = [] }) => {
@@ -61,17 +61,55 @@ const LatestProducts = ({ products = [] }) => {
           </motion.p>
         </div>
 
-        {/* Products Grid */}
+        {/* Products Horizontal Scroll */}
         {products.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12">
-              {products.map((product, index) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  index={index}
-                />
-              ))}
+            <div className="relative mb-8 md:mb-12">
+              {/* Scroll Buttons */}
+              {products.length > 2 && (
+                <>
+                  <button
+                    onClick={() => {
+                      const container = document.getElementById('latest-products-scroll');
+                      container?.scrollBy({ left: -400, behavior: 'smooth' });
+                    }}
+                    className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full items-center justify-center hover:bg-gray-50 transition-colors"
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-gray-700" />
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      const container = document.getElementById('latest-products-scroll');
+                      container?.scrollBy({ left: 400, behavior: 'smooth' });
+                    }}
+                    className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full items-center justify-center hover:bg-gray-50 transition-colors"
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight className="w-5 h-5 text-gray-700" />
+                  </button>
+                </>
+              )}
+              
+              <div
+                id="latest-products-scroll"
+                className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
+                style={{ scrollSnapType: 'x mandatory' }}
+              >
+                {products.map((product, index) => (
+                  <div
+                    key={product._id}
+                    className="flex-shrink-0 w-64 md:w-72 lg:w-80"
+                    style={{ scrollSnapAlign: 'start' }}
+                  >
+                    <ProductCard
+                      product={product}
+                      index={index}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Load More Section */}
@@ -93,7 +131,7 @@ const LatestProducts = ({ products = [] }) => {
                 >
                   <Link to="/products" className="btn-primary inline-flex items-center">
                     Browse All Products
-                    <ArrowRight className="w-5 h-5 ml-2" />
+                  <ChevronRight className="w-5 h-5 ml-2" />
                   </Link>
                 </motion.div>
               </div>

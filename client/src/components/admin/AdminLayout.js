@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   User,
-  Bell
+  Bell,
+  Tag
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -33,6 +34,12 @@ const AdminLayout = ({ children }) => {
       href: '/admin/products',
       icon: ShoppingBag,
       description: 'Manage Products'
+    },
+    {
+      name: 'Categories',
+      href: '/admin/categories',
+      icon: Tag,
+      description: 'Manage Categories'
     },
     {
       name: 'Analytics',

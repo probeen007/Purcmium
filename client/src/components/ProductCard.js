@@ -57,14 +57,12 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
       whileInView="visible"
       whileHover="hover"
       viewport={{ once: true, margin: "-50px" }}
-      className={`group relative ${topSelling ? 'md:col-span-2 md:row-span-2' : ''}`}
+      className="group relative h-full"
     >
       <Link to={`/product/${product.slug || product._id}`} onClick={handleProductClick}>
         <motion.div
           variants={hoverVariants}
-          className={`card-premium overflow-hidden h-full ${
-            topSelling ? 'min-h-[320px] md:min-h-[400px] lg:min-h-[500px]' : 'min-h-[300px] md:min-h-[350px]'
-          }`}
+          className="card-premium overflow-hidden h-full flex flex-col"
         >
         {/* Top Selling Badge */}
         {product.topSelling && (
@@ -77,11 +75,11 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
         )}
 
         {/* Product Image */}
-        <div className={`relative overflow-hidden ${topSelling ? 'h-48 md:h-64 lg:h-80' : 'h-40 md:h-48'}`}>
+        <div className="relative overflow-hidden bg-gray-50 h-56 md:h-64">
           <img
             src={product.images[0] || '/api/placeholder/400/300'}
             alt={product.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
             onError={(e) => {
               e.target.src = '/api/placeholder/400/300';
@@ -93,7 +91,7 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
         </div>
 
         {/* Product Info */}
-        <div className={`p-3 md:p-4 ${topSelling ? 'lg:p-6 xl:p-8' : 'lg:p-6'}`}>
+        <div className="p-3 md:p-4 lg:p-5 flex-1 flex flex-col">
           {/* Categories */}
           {product.categories && product.categories.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
@@ -110,21 +108,19 @@ const ProductCard = memo(({ product, index = 0, topSelling = false }) => {
           )}
 
           {/* Title */}
-          <h3 className={`font-semibold text-navy-800 mb-2 group-hover:text-primary-600 transition-colors duration-200 ${
-            topSelling ? 'text-xl lg:text-2xl' : 'text-lg'
-          } line-clamp-2`}>
+          <h3 className="font-semibold text-navy-800 mb-2 group-hover:text-primary-600 transition-colors duration-200 text-base md:text-lg line-clamp-2">
             {product.title}
           </h3>
 
           {/* Short Description */}
-          <p className={`text-gray-600 mb-4 ${topSelling ? 'text-base' : 'text-sm'} line-clamp-2`}>
+          <p className="text-gray-600 mb-4 text-sm line-clamp-2">
             {product.shortDescription}
           </p>
 
           {/* Price and Stats */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 mt-auto">
             <div className="flex flex-col">
-              <span className={`font-bold text-primary-600 ${topSelling ? 'text-2xl' : 'text-xl'}`}>
+              <span className="font-bold text-primary-600 text-lg md:text-xl">
                 {product.affiliateLinks && product.affiliateLinks.length > 1 
                   ? `From ${formatCurrency(product.price)}` 
                   : formatCurrency(product.price)}

@@ -78,13 +78,32 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
   const loadOptions = async () => {
     try {
-      const categoriesRes = await adminAPI.getProductCategories();
-
-      if (categoriesRes.data.success) {
-        setCategories(categoriesRes.data.data);
+      // Load categories from the category API
+      const categoriesRes = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/categories?active=true`);
+      const categoriesData = await categoriesRes.json();
+      
+      if (categoriesData.success) {
+        // Extract category names from the category objects
+        const categoryNames = categoriesData.data.categories.map(cat => cat.name);
+        setCategories(categoryNames);
+      } else {
+        // Fallback to old endpoint if category API fails
+        const fallbackRes = await adminAPI.getProductCategories();
+        if (fallbackRes.data.success) {
+          setCategories(fallbackRes.data.data);
+        }
       }
     } catch (error) {
-      console.error('Error loading options:', error);
+      console.error('Error loading categories:', error);
+      // Try fallback
+      try {
+        const fallbackRes = await adminAPI.getProductCategories();
+        if (fallbackRes.data.success) {
+          setCategories(fallbackRes.data.data);
+        }
+      } catch (fallbackError) {
+        console.error('Error loading fallback categories:', fallbackError);
+      }
     }
   };
 
@@ -430,26 +449,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Original Price ($)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.originalPrice}
-                  onChange={(e) => handleInputChange('originalPrice', e.target.value)}
-                  className={`input-field ${errors.originalPrice ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
-                  placeholder="0.00"
-                />
-                {errors.originalPrice && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.originalPrice}
-                  </p>
-                )}
-              </div>
             </div>
 
             {/* Descriptions */}

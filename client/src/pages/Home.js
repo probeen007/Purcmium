@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import HeroSection from '../components/sections/HeroSection';
 import FeaturedProducts from '../components/sections/FeaturedProducts';
 import LatestProducts from '../components/sections/LatestProducts';
+import CategoryProducts from '../components/sections/CategoryProducts';
+import CategoriesAvailable from '../components/sections/CategoriesAvailable';
 import CTASection from '../components/sections/CTASection';
 
 const Home = () => {
@@ -135,6 +137,16 @@ const Home = () => {
       {/* Latest Products */}
       <section id="products" className="py-20 bg-gray-50">
         <LatestProducts products={latestProducts} />
+      </section>
+
+      {/* Products by Category */}
+      <section className="py-20 bg-white">
+        <CategoryProducts />
+      </section>
+
+      {/* Categories Available */}
+      <section className="py-20 bg-gray-50">
+        <CategoriesAvailable />
       </section>
 
       {/* CTA Section */}

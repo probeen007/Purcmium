@@ -9,7 +9,6 @@ import {
   TrendingUp, 
   Share2,
   ShoppingCart,
-  Check,
   AlertCircle
 } from 'lucide-react';
 import { productsAPI, trackingAPI } from '../utils/api';
@@ -49,23 +48,20 @@ const ProductDetail = () => {
     loadProduct();
   }, [loadProduct]);
 
-  const handleAffiliateClick = async (affiliateUrl, networkName = 'Unknown') => {
-    try {
-      // Track click
-      await trackingAPI.trackClick({
-        productId: product._id,
-        referrer: window.location.href,
-        userAgent: navigator.userAgent,
-        network: networkName
-      });
-      
-      // Open affiliate link
-      window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
-    } catch (error) {
+  const handleAffiliateClick = (affiliateUrl, networkName = 'Unknown') => {
+    // Open affiliate link immediately (don't wait for tracking)
+    window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
+    
+    // Track click asynchronously in the background
+    trackingAPI.trackClick({
+      productId: product._id,
+      referrer: window.location.href,
+      userAgent: navigator.userAgent,
+      network: networkName
+    }).catch(error => {
+      // Silently log tracking errors - don't interrupt user experience
       console.error('Error tracking click:', error);
-      // Still open the link even if tracking fails
-      window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
-    }
+    });
   };
 
   const handleShare = async () => {
@@ -340,16 +336,6 @@ const ProductDetail = () => {
                   >
                     <Share2 className="w-5 h-5 mx-auto" />
                   </motion.button>
-                </div>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="flex items-center space-x-3">
-                  <Check className="w-5 h-5 text-green-600" />
-                  <div className="text-sm text-green-800">
-                    <strong>Safe Purchase:</strong> Secure checkout with trusted payment methods
-                  </div>
                 </div>
               </div>
 
