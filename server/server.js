@@ -12,6 +12,7 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const trackingRoutes = require('./routes/tracking');
 const adminRoutes = require('./routes/admin');
+const categoryRoutes = require('./routes/categories');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -237,6 +238,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/track', trackingLimiter, trackingRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // 404 handler for API routes
 app.use('/api/*', (req, res) => {

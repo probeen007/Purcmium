@@ -1,7 +1,14 @@
 const express = require('express');
 const Product = require('../models/Product');
 const Admin = require('../models/Admin');
+const Category = require('../models/Category');
 const { protect, adminOnly } = require('../middleware/auth');
+const {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  updateProductCounts
+} = require('../controllers/categoryController');
 
 const router = express.Router();
 
@@ -478,20 +485,18 @@ router.post('/products/bulk-delete', protect, adminOnly, async (req, res, next) 
 // @access  Private (Admin only)
 router.get('/categories', protect, adminOnly, async (req, res, next) => {
   try {
-    // Get unique categories from products (flattened array)
-    const products = await Product.find({}, 'categories').lean();
-    const allCategories = products.flatMap(product => product.categories || []);
-    const uniqueCategories = [...new Set(allCategories)].filter(cat => cat && cat.trim());
+    // Get categories from the Category model (database-driven)
+    const categories = await Category.find({ isActive: true })
+      .select('name')
+      .sort({ order: 1, name: 1 })
+      .lean();
     
-    // Default categories
-    const defaultCategories = ['affiliated', 'other', 'electronics', 'fashion', 'home', 'beauty', 'books', 'sports'];
-    
-    // Combine and deduplicate
-    const categories = [...new Set([...defaultCategories, ...uniqueCategories])];
+    // Extract just the category names
+    const categoryNames = categories.map(cat => cat.name);
     
     res.json({
       success: true,
-      data: categories
+      data: categoryNames
     });
   } catch (error) {
     next(error);
@@ -575,5 +580,26 @@ router.get('/products/export', protect, adminOnly, async (req, res, next) => {
     next(error);
   }
 });
+
+// Category Management Routes
+// @desc    Create new category
+// @route   POST /api/admin/categories
+// @access  Private (Admin only)
+router.post('/categories', protect, adminOnly, createCategory);
+
+// @desc    Update category
+// @route   PUT /api/admin/categories/:id
+// @access  Private (Admin only)
+router.put('/categories/:id', protect, adminOnly, updateCategory);
+
+// @desc    Delete category
+// @route   DELETE /api/admin/categories/:id
+// @access  Private (Admin only)
+router.delete('/categories/:id', protect, adminOnly, deleteCategory);
+
+// @desc    Update product counts for all categories
+// @route   POST /api/admin/categories/update-counts
+// @access  Private (Admin only)
+router.post('/categories/update-counts', protect, adminOnly, updateProductCounts);
 
 module.exports = router;
