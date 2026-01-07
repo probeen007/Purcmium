@@ -3,5 +3,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "installCommand": "npm install",
-  "framework": "create-react-app"
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://purcmium-backend.vercel.app/sitemap.xml"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://purcmium-backend.vercel.app/api/:path*"
+    }
+  ]
 }
