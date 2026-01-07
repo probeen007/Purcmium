@@ -8,7 +8,6 @@ import api from '../../utils/api';
 
 const CategoryProducts = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +17,6 @@ const CategoryProducts = () => {
         const categoriesRes = await api.get('/categories?active=true');
         if (categoriesRes.data.success) {
           const categoriesData = categoriesRes.data.data.categories;
-          setCategories(categoriesData);
           
           // Load products for each category
           const categoryData = await Promise.all(
@@ -132,7 +130,7 @@ const CategoryProducts = () => {
               </div>
               
               <Link
-                to={`/products?category=${category}`}
+                to={`/products?categories=${category}`}
                 className="text-primary-600 hover:text-primary-700 font-medium text-sm md:text-base flex items-center group"
               >
                 View All

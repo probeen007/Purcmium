@@ -99,7 +99,7 @@ const CategoriesAvailable = () => {
               transition={{ delay: index * 0.05 }}
             >
               <Link
-                to={`/products?category=${encodeURIComponent(category.name)}`}
+                to={`/products?categories=${encodeURIComponent(category.name)}`}
                 className="group block"
               >
                 <motion.div

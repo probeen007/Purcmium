@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import './index.css';
 
@@ -35,10 +36,11 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <AuthProvider>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className="App min-h-screen bg-white">
-          <ScrollToTop />
+    <HelmetProvider>
+      <AuthProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <div className="App min-h-screen bg-white">
+            <ScrollToTop />
           
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -150,6 +152,7 @@ function App() {
         </div>
       </Router>
     </AuthProvider>
+    </HelmetProvider>
   );
 }
 

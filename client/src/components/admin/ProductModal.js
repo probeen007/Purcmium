@@ -22,7 +22,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
     // Legacy fields (kept for backwards compatibility)
     affiliateUrl: '',
     status: 'active',
-    featured: false
+    topSelling: false
   });
 
   const [errors, setErrors] = useState({});
@@ -70,7 +70,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
         affiliateLinks: affiliateLinks,
         affiliateUrl: product.affiliateUrl || '',
         status: product.status || 'active',
-        featured: product.featured || false
+        topSelling: product.topSelling || false
       });
       setImageUrls(product.images?.length ? product.images : ['']);
     }
@@ -750,13 +750,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  id="featured"
-                  checked={formData.featured}
-                  onChange={(e) => handleInputChange('featured', e.target.checked)}
+                  id="topSelling"
+                  checked={formData.topSelling}
+                  onChange={(e) => handleInputChange('topSelling', e.target.checked)}
                   className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
-                <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
-                  Featured Product
+                <label htmlFor="topSelling" className="ml-2 text-sm text-gray-700">
+                  Top Selling Product
                 </label>
               </div>
             </div>

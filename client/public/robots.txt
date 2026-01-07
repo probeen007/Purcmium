@@ -1,0 +1,26 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+
+# Sitemap
+Sitemap: https://purcmium.com/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+Disallow: /admin/
+
+# Crawl-delay (optional - helps prevent server overload)
+Crawl-delay: 1

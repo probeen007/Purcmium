@@ -15,6 +15,7 @@ import { productsAPI, trackingAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
 import { formatCurrency, formatRelativeTime } from '../utils/helpers';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 const ProductDetail = () => {
   const { identifier } = useParams();
@@ -120,6 +121,53 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Dynamic SEO for Product */}
+      <SEO 
+        title={`${product.title} - Best Price from ${formatCurrency(product.price)}`}
+        description={product.shortDescription || product.description?.substring(0, 160) || `Buy ${product.title} at the best price in Nepal. Compare prices from multiple retailers including ${product.affiliateLinks?.map(link => link.network).join(', ')}. ${product.topSelling ? 'Top selling product!' : ''}`}
+        keywords={`${product.title}, ${product.title} price Nepal, ${product.categories?.join(', ')}, ${product.brand || ''}, buy ${product.title} Nepal, ${product.affiliateLinks?.map(link => link.network).join(', ')}`}
+        image={product.images?.[0] || 'https://purcmium.com/logo512.png'}
+        url={`https://purcmium.com/product/${product.slug || product._id}`}
+        type="product"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.title,
+          "description": product.description || product.shortDescription,
+          "image": product.images || [],
+          "brand": {
+            "@type": "Brand",
+            "name": product.brand || "Various Brands"
+          },
+          "offers": {
+            "@type": "AggregateOffer",
+            "priceCurrency": "NPR",
+            "lowPrice": product.price,
+            "highPrice": Math.max(...(product.affiliateLinks?.map(link => link.price) || [product.price])),
+            "offerCount": product.affiliateLinks?.length || 1,
+            "offers": product.affiliateLinks?.map(link => ({
+              "@type": "Offer",
+              "url": link.url,
+              "priceCurrency": "NPR",
+              "price": link.price,
+              "seller": {
+                "@type": "Organization",
+                "name": link.network
+              },
+              "availability": "https://schema.org/InStock"
+            })) || []
+          },
+          "aggregateRating": product.rating ? {
+            "@type": "AggregateRating",
+            "ratingValue": product.rating,
+            "bestRating": 5,
+            "worstRating": 1,
+            "ratingCount": product.reviews || 1
+          } : undefined,
+          "category": product.categories?.[0] || "Products"
+        }}
+      />
+      
       {/* Breadcrumb */}
       <div className="bg-white border-b">
         <div className="container-custom py-3 md:py-4 px-4">

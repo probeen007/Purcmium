@@ -4,6 +4,7 @@ import { RefreshCw } from 'lucide-react';
 import { productsAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 // Components
 import HeroSection from '../components/sections/HeroSection';
@@ -110,6 +111,30 @@ const Home = () => {
 
   return (
     <div className="overflow-hidden">
+      {/* SEO Meta Tags */}
+      <SEO 
+        title="Purcmium - Nepal's #1 Affiliate Product Buying Platform"
+        description="Buy products from top brands like Sony PlayStation, Samsung, Apple iPhone, Nike, Adidas, Dell, HP, and more. Nepal's most trusted online shopping platform with verified links to Amazon, ShareASale, and premium retailers. Get the best deals on gaming consoles, electronics, fashion, and lifestyle products."
+        keywords="buy products Nepal, Sony PlayStation Nepal, Samsung Nepal, Apple iPhone Nepal, Nike shoes Nepal, Adidas Nepal, Dell laptop Nepal, HP Nepal, PS5 Nepal, online shopping Nepal, Amazon Nepal, ShareASale Nepal, best deals Nepal"
+        url="https://purcmium.com"
+        type="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Purcmium",
+          "url": "https://purcmium.com",
+          "description": "Nepal's #1 Affiliate Product Buying Platform - Buy from Top Brands",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://purcmium.com/products?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
+      
       {/* Refresh Button */}
       <div className="fixed top-20 sm:top-24 right-4 z-50">
         <button

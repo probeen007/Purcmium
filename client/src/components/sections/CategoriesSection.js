@@ -23,7 +23,7 @@ const CategoriesSection = () => {
   };
 
   const handleCategoryClick = (categoryName) => {
-    navigate(`/products?category=${encodeURIComponent(categoryName)}`);
+    navigate(`/products?categories=${encodeURIComponent(categoryName)}`);
   };
 
   const sectionVariants = {

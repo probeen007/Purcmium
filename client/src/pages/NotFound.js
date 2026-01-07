@@ -2,10 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home, Search, ArrowLeft, Sparkles } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const NotFound = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-gray-100 flex items-center justify-center px-4">
+      {/* SEO for 404 Page */}
+      <SEO 
+        title="404 - Page Not Found | Purcmium"
+        description="The page you're looking for doesn't exist. Browse products from top brands like Sony, Samsung, Apple, Nike, Dell, HP at Nepal's #1 online shopping platform."
+        url={`https://purcmium.com${window.location.pathname}`}
+      />
+      
       <div className="max-w-md mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

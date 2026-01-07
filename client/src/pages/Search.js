@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { Search, Filter, Star, ExternalLink, TrendingUp } from 'lucide-react';
 
 const SearchPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
   const [products, setProducts] = useState([]);
@@ -31,12 +31,6 @@ const SearchPage = () => {
   });
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'relevance');
   const [showFilters, setShowFilters] = useState(false);
-  
-  // Popular searches
-  const popularSearches = [
-    'Electronics', 'Fashion', 'Home', 'Sports', 'Books',
-    'Gaming', 'Beauty', 'Health', 'Travel', 'Food'
-  ];
 
   const loadFilters = async () => {
     try {
@@ -260,14 +254,14 @@ const SearchPage = () => {
           </form>
 
           {/* Popular Searches */}
-          {!searchTerm && (
+          {!searchTerm && categories.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp className="w-4 h-4 text-gray-400" />
                 <span className="text-xs md:text-sm font-medium text-gray-600">Popular Searches:</span>
               </div>
               <div className="flex flex-wrap gap-1.5 md:gap-2">
-                {popularSearches.map((term) => (
+                {categories.slice(0, 10).map((term) => (
                   <button
                     key={term}
                     onClick={() => handlePopularSearch(term)}
