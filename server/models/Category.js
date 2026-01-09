@@ -40,7 +40,14 @@ const categorySchema = new mongoose.Schema({
 
 // Generate slug before saving
 categorySchema.pre('save', function(next) {
-  if (this.isModified('name')) {
+  // Always generate slug if name exists, even if not modified
+  // This ensures slug is never undefined
+  if (this.name && (!this.slug || this.slug === 'undefined')) {
+    this.slug = this.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  } else if (this.isModified('name')) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')

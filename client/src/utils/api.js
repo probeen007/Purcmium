@@ -118,6 +118,10 @@ export const adminAPI = {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
   },
+  
+  // Bulk Import
+  get: (endpoint, config) => api.get(`/admin${endpoint}`, config),
+  post: (endpoint, data, config) => api.post(`/admin${endpoint}`, data, config),
 };
 
 // Utility functions

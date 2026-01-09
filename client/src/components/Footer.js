@@ -14,16 +14,14 @@ const Footer = () => {
       { name: 'Terms of Service', path: '/terms' },
     ],
     categories: [
-      { name: 'Electronics', path: '/products?category=electronics' },
-      { name: 'Fashion', path: '/products?category=fashion' },
-      { name: 'Home & Garden', path: '/products?category=home-garden' },
-      { name: 'Sports', path: '/products?category=sports' },
+      { name: 'Nike', path: '/products?category=nike' },
+      { name: 'Apple', path: '/products?category=apple' },
+      { name: 'Sony', path: '/products?category=sony' },
+      { name: 'Samsung', path: '/products?category=samsung' },
     ],
     support: [
       { name: 'Help Center', path: '/help' },
       { name: 'Contact Us', path: '/contact' },
-      { name: 'Shipping Info', path: '/shipping' },
-      { name: 'Returns', path: '/returns' },
     ],
   };
 
@@ -67,11 +65,11 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <Phone className="w-4 h-4 text-gold-400" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+                <span className="text-sm">+977 9810707356</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <MapPin className="w-4 h-4 text-gold-400" />
-                <span className="text-sm">New York, NY 10001</span>
+                <span className="text-sm">Kathmandu, Nepal</span>
               </div>
             </div>
           </motion.div>

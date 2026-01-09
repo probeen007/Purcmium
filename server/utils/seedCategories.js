@@ -16,6 +16,20 @@ const categories = [
     description: 'Sony electronics including PlayStation, cameras, and audio devices',
     isActive: true,
     order: 2
+  },
+  {
+    name: 'Samsung',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg',
+    description: 'Samsung smartphones, tablets, TVs and home appliances',
+    isActive: true,
+    order: 3
+  },
+  {
+    name: 'Dell',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg',
+    description: 'Dell laptops, desktops and computer accessories',
+    isActive: true,
+    order: 4
   }
 ];
 

@@ -14,6 +14,7 @@ const trackingRoutes = require('./routes/tracking');
 const adminRoutes = require('./routes/admin');
 const categoryRoutes = require('./routes/categories');
 const sitemapRoutes = require('./routes/sitemap');
+const bulkImportRoutes = require('./routes/bulkImport');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -239,6 +240,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/track', trackingLimiter, trackingRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/import', bulkImportRoutes);
 app.use('/api/categories', categoryRoutes);
 
 // Sitemap route (direct GET handler)

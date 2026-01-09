@@ -19,6 +19,7 @@ const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
+const AdminBulkImport = lazy(() => import('./pages/admin/AdminBulkImport'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
@@ -90,6 +91,12 @@ function App() {
               <Route path="/admin/products" element={
                 <ProtectedRoute>
                   <AdminProducts />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/admin/bulk-import" element={
+                <ProtectedRoute>
+                  <AdminBulkImport />
                 </ProtectedRoute>
               } />
               

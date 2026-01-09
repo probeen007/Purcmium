@@ -76,7 +76,9 @@ const FeaturedProducts = ({ products = [] }) => {
                   className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full items-center justify-center hover:bg-gray-50 transition-colors"
                   aria-label="Scroll left"
                 >
-                <ChevronLeft className="w-5 h-5 text-gray-700" />
+                  <ChevronLeft className="w-5 h-5 text-gray-700" />
+                </button>
+                <button
                   onClick={() => {
                     const container = document.getElementById('top-selling-scroll');
                     container?.scrollBy({ left: 400, behavior: 'smooth' });
