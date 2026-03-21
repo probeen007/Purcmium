@@ -15,11 +15,20 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { adminAPI, handleApiError } from '../../utils/api';
-import { formatCurrency, formatNumber } from '../../utils/helpers';
+import { formatCurrency, formatNumber, isSafeExternalUrl } from '../../utils/helpers';
 import AdminLayout from '../../components/admin/AdminLayout';
 import ProductModal from '../../components/admin/ProductModal';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import toast from 'react-hot-toast';
+
+const openSafeExternalLink = (url) => {
+  if (!isSafeExternalUrl(url)) {
+    toast.error('Invalid affiliate URL');
+    return;
+  }
+
+  window.open(url, '_blank', 'noopener,noreferrer');
+};
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -509,7 +518,7 @@ const AdminProducts = () => {
                               <Eye className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => window.open(product.affiliateUrl, '_blank')}
+                              onClick={() => openSafeExternalLink(product.affiliateUrl)}
                               className="text-green-600 hover:text-green-900"
                               title="Visit Affiliate Link"
                             >

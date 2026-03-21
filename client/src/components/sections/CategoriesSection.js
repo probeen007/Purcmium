@@ -14,8 +14,8 @@ const CategoriesSection = () => {
   const fetchCategories = async () => {
     try {
       const response = await api.get('/categories?active=true');
-      if (response.data.success) {
-        setCategories(response.data.data.categories);
+        if (response.success) {
+          setCategories(response.data.categories);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);

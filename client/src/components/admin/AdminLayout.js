@@ -15,7 +15,6 @@ import {
   Upload
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import toast from 'react-hot-toast';
 
 const AdminLayout = ({ children }) => {
   const { logout, user } = useAuth();
@@ -65,11 +64,10 @@ const AdminLayout = ({ children }) => {
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success('Logged out successfully');
       navigate('/admin/login');
     } catch (error) {
       console.error('Logout error:', error);
-      toast.error('Error logging out');
+      navigate('/admin/login');
     }
   };
 

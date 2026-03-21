@@ -138,16 +138,16 @@ router.post('/preview', protect, adminOnly, upload.single('csvFile'), async (req
       });
     }
 
-    // Get existing categories from database
-    const existingCategories = await Category.find().select('name slug');
+    // Get existing categories from database (lean for read-only efficiency)
+    const existingCategories = await Category.find().select('name slug').lean();
     const existingCategorySlugs = new Set(existingCategories.map(cat => cat.slug));
     const existingCategoryMap = {};
     existingCategories.forEach(cat => {
       existingCategoryMap[cat.slug] = cat.name;
     });
 
-    // Get existing products for duplicate detection
-    const existingProducts = await Product.find().select('title affiliateLinks');
+    // Get existing products for duplicate detection (lean for read-only efficiency)
+    const existingProducts = await Product.find().select('title affiliateLinks').lean();
     const existingProductMap = {};
     existingProducts.forEach(product => {
       const primaryLink = product.affiliateLinks?.find(link => link.isPrimary);

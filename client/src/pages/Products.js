@@ -55,6 +55,7 @@ const Products = () => {
       
       if (hasAdvancedFilters) {
         // Use search endpoint for advanced filtering
+        // Now with server-side pagination for efficiency
         const response = await productsAPI.searchProducts({
           search: searchTerm || undefined,
           categories: selectedCategories,
@@ -62,25 +63,15 @@ const Products = () => {
           minPrice: priceRange.min || undefined,
           maxPrice: priceRange.max || undefined,
           sort: sortBy,
-          limit: 100 // Get more for advanced search
+          page: currentPage,
+          limit: 12  // Server-side pagination instead of fetching all
         });
 
         if (response.data.success) {
-          let products = response.data.data.products || [];
-          
-          // Apply topSelling filter client-side if needed
-          if (topSellingOnly) {
-            products = products.filter(p => p.topSelling);
-          }
-          
-          // Client-side pagination
-          const startIndex = (currentPage - 1) * 12;
-          const endIndex = startIndex + 12;
-          const paginatedProducts = products.slice(startIndex, endIndex);
-          
-          setProducts(paginatedProducts);
-          setTotalPages(Math.ceil(products.length / 12));
-          setTotalProducts(products.length);
+          const { products, pagination } = response.data.data;
+          setProducts(products || []);
+          setTotalPages(pagination?.totalPages || Math.ceil((products?.length || 0) / 12));
+          setTotalProducts(pagination?.total || products?.length || 0);
         }
       } else {
         // Use simple GET endpoint for basic listing
@@ -178,14 +169,8 @@ const Products = () => {
     loadCategories();
   }, [loadProducts, loadCategories]);
   
-  useEffect(() => {
-    // Auto-refresh every 3 minutes for products page
-    const interval = setInterval(() => {
-      loadProducts(true); // Silent refresh
-    }, 3 * 60 * 1000);
-    
-    return () => clearInterval(interval);
-  }, [loadProducts]);
+  // Removed auto-refresh interval - wastes bandwidth
+  // Users can refresh manually or filters trigger fresh fetch
 
   useEffect(() => {
     // Update URL params when filters change

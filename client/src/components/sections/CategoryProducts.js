@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Tag } from 'lucide-react';
 import ProductCard from '../ProductCard';
 import { productsAPI } from '../../utils/api';
-import api from '../../utils/api';
 
 const CategoryProducts = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
@@ -13,29 +12,55 @@ const CategoryProducts = () => {
   useEffect(() => {
     const loadCategoryProducts = async () => {
       try {
-        // First fetch categories with images
-        const categoriesRes = await api.get('/categories?active=true');
-        if (categoriesRes.data.success) {
-          const categoriesData = categoriesRes.data.data.categories;
-          
-          // Load products for each category
-          const categoryData = await Promise.all(
-            categoriesData.slice(0, 6).map(async (categoryObj) => {
-              const productsRes = await productsAPI.getProducts({
-                categories: categoryObj.name,
-                limit: 12
-              });
-              return {
-                category: categoryObj.name,
-                categoryImage: categoryObj.image,
-                products: productsRes.data.data.products || []
-              };
-            })
-          );
-          
-          // Filter out categories with no products
-          setCategoryProducts(categoryData.filter(item => item.products.length > 0));
+        const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        let categoriesData = [];
+
+        // Primary source: category collection (with images)
+        try {
+          const categoriesRes = await fetch(`${apiBase}/api/categories?active=true`).then(r => r.json());
+          if (categoriesRes?.success && Array.isArray(categoriesRes?.data?.categories)) {
+            categoriesData = categoriesRes.data.categories;
+          }
+        } catch (error) {
+          // Fallback handled below
         }
+
+        // Fallback source: category names from products metadata
+        if (!categoriesData.length) {
+          const metaRes = await productsAPI.getCategories();
+          if (metaRes.data?.success && Array.isArray(metaRes.data?.data?.categories)) {
+            categoriesData = metaRes.data.data.categories.map((name) => ({ name }));
+          }
+        }
+
+        if (!categoriesData.length) {
+          setCategoryProducts([]);
+          return;
+        }
+
+        // Load products for each category
+        const categoryData = await Promise.all(
+          categoriesData.slice(0, 6).map(async (categoryObj) => {
+            const categoryName = categoryObj?.name || categoryObj;
+            if (!categoryName) {
+              return null;
+            }
+
+            const productsRes = await productsAPI.getProducts({
+              categories: categoryName,
+              limit: 12
+            });
+
+            return {
+              category: categoryName,
+              categoryImage: categoryObj?.image || `https://via.placeholder.com/200/4F46E5/ffffff?text=${String(categoryName).charAt(0)}`,
+              products: productsRes.data?.data?.products || []
+            };
+          })
+        );
+
+        // Filter out empty/invalid categories
+        setCategoryProducts(categoryData.filter(item => item && item.products.length > 0));
       } catch (error) {
         console.error('Error loading category products:', error);
       } finally {
@@ -67,7 +92,14 @@ const CategoryProducts = () => {
   }
 
   if (categoryProducts.length === 0) {
-    return null;
+    return (
+      <div className="container-custom px-4 py-12 md:py-16 text-center">
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-navy-800 mb-3">
+          Explore by Category
+        </h2>
+        <p className="text-gray-600">No category products available right now.</p>
+      </div>
+    );
   }
 
   return (
@@ -130,7 +162,7 @@ const CategoryProducts = () => {
               </div>
               
               <Link
-                to={`/products?categories=${category}`}
+                to={`/products?categories=${encodeURIComponent(category)}`}
                 className="text-primary-600 hover:text-primary-700 font-medium text-sm md:text-base flex items-center group"
               >
                 View All

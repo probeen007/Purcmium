@@ -322,16 +322,14 @@ productSchema.statics.searchProducts = function(query, options = {}) {
     .limit(limit);
 };
 
-// Method to increment clicks
+// DEPRECATED: Use atomic $inc in tracking routes instead
+// Kept for backward compatibility only
 productSchema.methods.incrementClicks = function() {
-  this.clicks += 1;
-  return this.save();
+  return Product.findByIdAndUpdate(this._id, { $inc: { clicks: 1 } }, { new: true });
 };
 
-// Method to increment conversions
 productSchema.methods.incrementConversions = function() {
-  this.conversions += 1;
-  return this.save();
+  return Product.findByIdAndUpdate(this._id, { $inc: { conversions: 1 } }, { new: true });
 };
 
 module.exports = mongoose.model('Product', productSchema);

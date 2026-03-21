@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Trash2, ExternalLink, AlertCircle } from 'lucide-react';
 import { adminAPI, handleApiError } from '../../utils/api';
+import { isSafeExternalUrl } from '../../utils/helpers';
 import toast from 'react-hot-toast';
 
 const ProductModal = ({ product, onClose, onSave }) => {
@@ -31,6 +32,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [newTag, setNewTag] = useState('');
 
   const [categories, setCategories] = useState([]);
+
+  const openSafeExternalLink = (url) => {
+    if (!isSafeExternalUrl(url)) {
+      toast.error('Please enter a valid http/https URL');
+      return;
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   useEffect(() => {
     loadOptions();
@@ -594,7 +604,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           {link.url && (
                             <button
                               type="button"
-                              onClick={() => window.open(link.url, '_blank')}
+                              onClick={() => openSafeExternalLink(link.url)}
                               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                               title="Test URL"
                             >

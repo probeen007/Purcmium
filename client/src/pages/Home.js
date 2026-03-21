@@ -62,9 +62,9 @@ const Home = () => {
   useEffect(() => {
     loadHomeData();
     
-    // Auto-refresh every 5 minutes to get latest data
-    const interval = setInterval(loadHomeData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    // Rely on browser caching and manual refresh button instead of auto-refresh
+    // Auto-refresh defeats caching and wastes bandwidth
+    // Users can click the refresh button if they want fresh data
   }, [loadHomeData]);
 
   const handleRefresh = () => {

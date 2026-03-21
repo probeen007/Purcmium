@@ -196,9 +196,7 @@ const AdminLogin = () => {
             <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="text-xs text-blue-700">
                 <strong>Development Mode:</strong><br />
-                Default credentials:<br />
-                Email: admin@purcmium.com<br />
-                Password: Admin123!@#
+                Use your configured environment credentials.
               </div>
             </div>
           )}

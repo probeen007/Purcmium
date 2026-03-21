@@ -5,6 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression');
 require('dotenv').config();
 
 // Import routes
@@ -109,6 +110,18 @@ const trackingLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Compression middleware - gzip responses
+app.use(compression({
+  filter: (req, res) => {
+    // Don't compress responses < 1KB
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6 // Balance between speed and compression ratio
+}));
+
 // Body parsing middleware (reduced limits for Vercel)
 app.use(express.json({ limit: '1mb' })); // Reduced from 10mb
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
@@ -146,6 +159,22 @@ app.get('/health', (req, res) => {
     message: 'Purcmium API is running',
     timestamp: new Date().toISOString()
   });
+});
+
+// Cache control for public static product data
+app.use('/api/products/top-selling', (req, res, next) => {
+  res.set('Cache-Control', 'public, max-age=300'); // 5 minutes
+  next();
+});
+
+app.use('/api/products/latest', (req, res, next) => {
+  res.set('Cache-Control', 'public, max-age=300'); // 5 minutes
+  next();
+});
+
+app.use('/api/categories', (req, res, next) => {
+  res.set('Cache-Control', 'public, max-age=3600'); // 1 hour
+  next();
 });
 
 // Admin reset endpoint (for development/debugging only)

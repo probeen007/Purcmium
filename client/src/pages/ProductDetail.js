@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { productsAPI, trackingAPI } from '../utils/api';
 import { handleApiError } from '../utils/api';
-import { formatCurrency, formatRelativeTime } from '../utils/helpers';
+import { formatCurrency, formatRelativeTime, isSafeExternalUrl } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 
@@ -50,6 +50,11 @@ const ProductDetail = () => {
   }, [loadProduct]);
 
   const handleAffiliateClick = (affiliateUrl, networkName = 'Unknown') => {
+    if (!isSafeExternalUrl(affiliateUrl)) {
+      toast.error('Invalid affiliate URL');
+      return;
+    }
+
     // Open affiliate link immediately (don't wait for tracking)
     window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
     

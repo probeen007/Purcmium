@@ -35,22 +35,24 @@ router.post('/click', validate(trackClickSchema), async (req, res, next) => {
       });
     }
 
-    // Increment click count
-    await product.incrementClicks();
+    // Use atomic increment instead of fetch-modify-save
+    // This is much faster and avoids race conditions
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { clicks: 1 } },
+      { new: true, select: '_id clicks title affiliateUrl' }
+    ).lean();
 
-    // Log click for analytics (only in development)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`Product click tracked: ${product.title} (ID: ${productId})`);
-    }
+    // Click tracked atomically - no additional logging needed
 
     res.status(200).json({
       success: true,
       message: 'Click tracked successfully',
       data: {
-        productId: product._id,
-        title: product.title,
-        affiliateUrl: product.affiliateUrl,
-        clicks: product.clicks
+        productId: updatedProduct._id,
+        title: updatedProduct.title,
+        affiliateUrl: updatedProduct.affiliateUrl,
+        clicks: updatedProduct.clicks
       }
     });
 
@@ -90,13 +92,14 @@ router.post('/conversion', async (req, res, next) => {
       });
     }
 
-    // Increment conversion count
-    await product.incrementConversions();
+    // Use atomic increment instead of fetch-modify-save (faster & atomic)
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { conversions: 1 } },
+      { new: true, select: '_id conversions title' }
+    ).lean();
 
-    // Log conversion for analytics (only in development)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`Conversion tracked: ${product.title} (ID: ${productId})`);
-    }
+    // Conversion tracked atomically - no additional logging needed
 
     res.status(200).json({
       success: true,

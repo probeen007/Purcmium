@@ -101,6 +101,16 @@ export const isValidUrl = (url) => {
   }
 };
 
+// Validate URL is safe for external navigation (http/https only)
+export const isSafeExternalUrl = (url) => {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
 // Validate password strength
 export const validatePassword = (password) => {
   const minLength = 8;

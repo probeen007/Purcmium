@@ -327,7 +327,7 @@ router.get('/meta/networks', async (req, res, next) => {
   }
 });
 
-// @desc    Advanced product search
+// @desc    Advanced product search with pagination
 // @route   POST /api/products/search
 // @access  Public
 router.post('/search', async (req, res, next) => {
@@ -339,19 +339,26 @@ router.post('/search', async (req, res, next) => {
       minPrice,
       maxPrice,
       sort = 'relevance',
-      limit = 20
+      page = 1,
+      limit = 12,
+      topSelling
     } = req.body;
+
+    // Validate pagination params
+    const pageNum = Math.max(1, parseInt(page));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // Cap at 100
+    const skip = (pageNum - 1) * limitNum;
 
     // Build query
     const query = { status: 'active' };
 
-    // Text search
+    // Text search - use title/description for faster text search
     if (search && search.trim()) {
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { categories: { $regex: search, $options: 'i' } },
-        { tags: { $regex: search, $options: 'i' } }
+        { title: { $regex: search, $options: 'i' } },
+        { shortDescription: { $regex: search, $options: 'i' } },
+        { categories: { $in: [new RegExp(search, 'i')] } },
+        { tags: { $in: [new RegExp(search, 'i')] } }
       ];
     }
 
@@ -362,7 +369,9 @@ router.post('/search', async (req, res, next) => {
 
     // Network filter
     if (networks.length > 0) {
-      query.network = { $in: networks };
+      query.affiliateLinks = {
+        $elemMatch: { network: { $in: networks } }
+      };
     }
 
     // Price range filter
@@ -370,6 +379,11 @@ router.post('/search', async (req, res, next) => {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
       if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    // Top selling filter
+    if (topSelling !== undefined) {
+      query.topSelling = topSelling === true || topSelling === 'true';
     }
 
     // Build sort object
@@ -382,10 +396,10 @@ router.post('/search', async (req, res, next) => {
         sortObj = { price: -1 };
         break;
       case 'name':
-        sortObj = { name: 1 };
+        sortObj = { title: 1 };
         break;
       case 'rating':
-        sortObj = { rating: -1, createdAt: -1 };
+        sortObj = { clicks: -1, createdAt: -1 };
         break;
       case 'latest':
         sortObj = { createdAt: -1 };
@@ -395,16 +409,35 @@ router.post('/search', async (req, res, next) => {
         sortObj = { topSelling: -1, createdAt: -1 };
     }
 
-    // Execute query
-    const products = await Product.find(query)
-      .sort(sortObj)
-      .limit(parseInt(limit))
-      .select('-__v');
+    // Execute query with pagination
+    const [products, total] = await Promise.all([
+      Product.find(query)
+        .sort(sortObj)
+        .skip(skip)
+        .limit(limitNum)
+        .select('-__v')
+        .lean(),
+      Product.countDocuments(query)
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+    const hasNextPage = pageNum < totalPages;
+    const hasPrevPage = pageNum > 1;
 
     res.status(200).json({
       success: true,
       count: products.length,
-      data: { products }
+      data: {
+        products,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages,
+          hasNextPage,
+          hasPrevPage
+        }
+      }
     });
 
   } catch (error) {
