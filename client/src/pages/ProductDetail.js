@@ -124,52 +124,95 @@ const ProductDetail = () => {
     );
   }
 
+  const productTitle = product.metaTitle || product.title;
+  const productDescription = product.metaDescription || product.shortDescription || product.description?.substring(0, 160) || `Buy ${product.title} at the best price in Nepal.`;
+  const productUrl = `https://purcmium.com/product/${product.slug || product._id}`;
+  const productImage = product.images?.[0] || 'https://purcmium.com/logo512.png';
+  const primaryCategory = product.categories?.[0] || 'Products';
+  const productNetworks = product.affiliateLinks?.map(link => link.network).filter(Boolean).join(', ');
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Dynamic SEO for Product */}
       <SEO 
-        title={`${product.title} - Best Price from ${formatCurrency(product.price)}`}
-        description={product.shortDescription || product.description?.substring(0, 160) || `Buy ${product.title} at the best price in Nepal. Compare prices from multiple retailers including ${product.affiliateLinks?.map(link => link.network).join(', ')}. ${product.topSelling ? 'Top selling product!' : ''}`}
-        keywords={`${product.title}, ${product.title} price Nepal, ${product.categories?.join(', ')}, ${product.brand || ''}, buy ${product.title} Nepal, ${product.affiliateLinks?.map(link => link.network).join(', ')}`}
-        image={product.images?.[0] || 'https://purcmium.com/logo512.png'}
-        url={`https://purcmium.com/product/${product.slug || product._id}`}
+        title={`${productTitle} - Best Price from ${formatCurrency(product.price)}`}
+        description={productDescription}
+        keywords={`${product.title}, ${product.title} price Nepal, ${product.categories?.join(', ') || ''}, ${product.brand || ''}, buy ${product.title} Nepal, ${productNetworks || ''}`}
+        image={productImage}
+        url={productUrl}
+        canonical={productUrl}
         type="product"
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "Product",
-          "name": product.title,
-          "description": product.description || product.shortDescription,
-          "image": product.images || [],
-          "brand": {
-            "@type": "Brand",
-            "name": product.brand || "Various Brands"
-          },
-          "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": "NPR",
-            "lowPrice": product.price,
-            "highPrice": Math.max(...(product.affiliateLinks?.map(link => link.price) || [product.price])),
-            "offerCount": product.affiliateLinks?.length || 1,
-            "offers": product.affiliateLinks?.map(link => ({
-              "@type": "Offer",
-              "url": link.url,
-              "priceCurrency": "NPR",
-              "price": link.price,
-              "seller": {
-                "@type": "Organization",
-                "name": link.network
+          "@graph": [
+            {
+              "@type": "Product",
+              "name": product.title,
+              "description": product.description || product.shortDescription,
+              "image": product.images || [],
+              "url": productUrl,
+              "sku": product._id,
+              "brand": {
+                "@type": "Brand",
+                "name": product.brand || "Purcmium"
               },
-              "availability": "https://schema.org/InStock"
-            })) || []
-          },
-          "aggregateRating": product.rating ? {
-            "@type": "AggregateRating",
-            "ratingValue": product.rating,
-            "bestRating": 5,
-            "worstRating": 1,
-            "ratingCount": product.reviews || 1
-          } : undefined,
-          "category": product.categories?.[0] || "Products"
+              "offers": {
+                "@type": "AggregateOffer",
+                "priceCurrency": "NPR",
+                "lowPrice": product.price,
+                "highPrice": Math.max(...(product.affiliateLinks?.map(link => link.price) || [product.price])),
+                "offerCount": product.affiliateLinks?.length || 1,
+                "offers": product.affiliateLinks?.map(link => ({
+                  "@type": "Offer",
+                  "url": link.url,
+                  "priceCurrency": "NPR",
+                  "price": link.price,
+                  "seller": {
+                    "@type": "Organization",
+                    "name": link.network
+                  },
+                  "availability": "https://schema.org/InStock"
+                })) || []
+              },
+              "aggregateRating": product.rating ? {
+                "@type": "AggregateRating",
+                "ratingValue": product.rating,
+                "bestRating": 5,
+                "worstRating": 1,
+                "ratingCount": product.reviews || 1
+              } : undefined,
+              "category": primaryCategory
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://purcmium.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Products",
+                  "item": "https://purcmium.com/products"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": primaryCategory,
+                  "item": `https://purcmium.com/products?categories=${encodeURIComponent(primaryCategory)}`
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 4,
+                  "name": product.title,
+                  "item": productUrl
+                }
+              ]
+            }
+          ]
         }}
       />
       

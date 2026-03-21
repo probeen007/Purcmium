@@ -9,7 +9,8 @@ const SEO = ({
   url = 'https://purcmium.com',
   type = 'website',
   structuredData = null,
-  canonical = null
+  canonical = null,
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
 }) => {
   const siteTitle = title.includes('Purcmium') ? title : `${title} | Purcmium`;
   const canonicalUrl = canonical || url;
@@ -40,7 +41,7 @@ const SEO = ({
       <meta property="twitter:image" content={image} />
 
       {/* Additional Meta Tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="robots" content={robots} />
       <meta name="googlebot" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="geo.region" content="NP" />

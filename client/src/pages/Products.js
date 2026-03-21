@@ -240,7 +240,7 @@ const Products = () => {
       <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-32 sm:w-48' : 'aspect-square'}`}>
         <img
           src={product.images?.[0] || '/api/placeholder/400/400'}
-          alt={product.name}
+          alt={product.title || product.name || 'Product'}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {product.topSelling && (
@@ -264,7 +264,7 @@ const Products = () => {
         <div className={viewMode === 'list' ? 'flex justify-between items-start' : ''}>
           <div className={viewMode === 'list' ? 'flex-1 pr-4' : ''}>
             <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
-              {product.name}
+              {product.title || product.name}
             </h3>
             
             <p className="text-sm text-gray-600 mb-3 line-clamp-2">
@@ -373,6 +373,8 @@ const Products = () => {
             : 'buy products Nepal, Sony Nepal, Samsung Nepal, Apple Nepal, Nike Nepal, Dell Nepal, HP Nepal, online shopping Nepal, Amazon Nepal, ShareASale Nepal'
         }
         url={`https://purcmium.com/products${searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : selectedCategories.length > 0 ? `?categories=${selectedCategories.join(',')}` : ''}`}
+        canonical={searchTerm ? 'https://purcmium.com/products' : `https://purcmium.com/products${selectedCategories.length > 0 ? `?categories=${selectedCategories.join(',')}` : ''}`}
+        robots={searchTerm || selectedNetworks.length > 0 || priceRange.min || priceRange.max ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
         type="website"
         structuredData={{
           "@context": "https://schema.org",
@@ -388,7 +390,7 @@ const Products = () => {
               "position": index + 1,
               "item": {
                 "@type": "Product",
-                "name": product.name,
+                "name": product.title || product.name,
                 "description": product.description,
                 "image": product.images?.[0],
                 "offers": {

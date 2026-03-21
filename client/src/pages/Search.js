@@ -6,6 +6,7 @@ import { handleApiError } from '../utils/api';
 import { formatCurrency } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import { Search, Filter, Star, ExternalLink, TrendingUp } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -140,7 +141,7 @@ const SearchPage = () => {
       <div className="relative aspect-square overflow-hidden">
         <img
           src={product.images?.[0] || '/api/placeholder/400/400'}
-          alt={product.name}
+          alt={product.title || product.name || 'Product'}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {product.topSelling && (
@@ -159,7 +160,7 @@ const SearchPage = () => {
 
       <div className="p-4">
         <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
-          {product.name}
+          {product.title || product.name}
         </h3>
         
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
@@ -221,6 +222,16 @@ const SearchPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO
+        title={searchTerm ? `Search: ${searchTerm}` : 'Search Products'}
+        description={searchTerm
+          ? `Search results for ${searchTerm} on Purcmium.`
+          : 'Search products across all categories on Purcmium.'}
+        url={`https://purcmium.com/search${searchTerm ? `?q=${encodeURIComponent(searchTerm)}` : ''}`}
+        canonical="https://purcmium.com/search"
+        robots="noindex, follow"
+      />
+
       <div className="container-custom py-6 md:py-8 px-4">
         {/* Search Header */}
         <div className="text-center mb-6 md:mb-8">
