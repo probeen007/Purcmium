@@ -1,8 +1,8 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "build",
-  "installCommand": "npm install",
+  "outputDirectory": "client/build",
+  "installCommand": "npm install && cd client && npm install",
   "framework": "create-react-app",
   "rewrites": [
     {
